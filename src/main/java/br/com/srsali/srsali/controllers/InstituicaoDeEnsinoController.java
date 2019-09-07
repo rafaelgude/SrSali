@@ -2,18 +2,22 @@ package br.com.srsali.srsali.controllers;
 
 import java.util.Set;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.srsali.srsali.enums.Funcao;
 import br.com.srsali.srsali.enums.Permissao;
+import br.com.srsali.srsali.models.InstituicaoDeEnsino;
 import br.com.srsali.srsali.models.Usuario;
 import br.com.srsali.srsali.repositories.InstituicaoDeEnsinoRepository;
 import br.com.srsali.srsali.repositories.UsuarioRepository;
+import javassist.NotFoundException;
 
 @RestController
 @RequestMapping("/instituicao")
@@ -35,5 +39,14 @@ public class InstituicaoDeEnsinoController {
 		
 		return ResponseEntity.created(null).build();
 	}
+	
+	@PutMapping
+    public ResponseEntity<Void> alterar(@RequestBody InstituicaoDeEnsino instituicao) throws NotFoundException {
+	    var novaInstituicao = instituicaoRepo.findById(instituicao.getId()).orElseThrow(() -> new NotFoundException("Instituição não encontrada."));
+	    BeanUtils.copyProperties(instituicao, novaInstituicao, "id");
+	    instituicaoRepo.save(novaInstituicao);
+	    
+        return ResponseEntity.created(null).build();
+    }
 	
 }

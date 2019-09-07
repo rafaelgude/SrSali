@@ -15,6 +15,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import br.com.srsali.srsali.enums.Funcao;
 import br.com.srsali.srsali.enums.Permissao;
 
@@ -44,9 +46,10 @@ public class Usuario implements Serializable {
 	private LocalDateTime dataHoraConvite;
 	
 	@ElementCollection(targetClass = Permissao.class)
-	@CollectionTable(name = "usuario_permissao", joinColumns = @JoinColumn(name = "usuario_id"))
-	@Column(name = "permissao_id")
-	private Set<Permissao> permissoes = new HashSet<>();
+    @CollectionTable(name = "usuario_permissao", joinColumns = @JoinColumn(name = "usuario_id"))
+    @Column(name = "permissao_id")
+	@JsonProperty("permissoes")
+    private Set<Permissao> permissoes = new HashSet<>();
 	
 	@ManyToOne
 	@JoinColumn(name = "instituicao_id")
@@ -57,84 +60,84 @@ public class Usuario implements Serializable {
 		this.funcoes.add(Funcao.USUARIO);
 	}
 
-	public long getId() {
-		return id;
-	}
+    public long getId() {
+        return id;
+    }
 
-	public void setId(long id) {
-		this.id = id;
-	}
+    public void setId(long id) {
+        this.id = id;
+    }
 
-	public String getNome() {
-		return nome;
-	}
+    public String getNome() {
+        return nome;
+    }
 
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
 
-	public String getEmail() {
-		return email;
-	}
+    public String getEmail() {
+        return email;
+    }
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-	public String getSenha() {
-		return senha;
-	}
+    public String getSenha() {
+        return senha;
+    }
 
-	public void setSenha(String senha) {
-		this.senha = senha;
-	}
+    public void setSenha(String senha) {
+        this.senha = senha;
+    }
 
-	public String getTelefone() {
-		return telefone;
-	}
+    public String getTelefone() {
+        return telefone;
+    }
 
-	public void setTelefone(String telefone) {
-		this.telefone = telefone;
-	}
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
+    }
 
-	public Set<Funcao> getFuncoes() {
-		return funcoes;
-	}
+    public Set<Funcao> getFuncoes() {
+        return funcoes;
+    }
 
-	public void setFuncoes(Set<Funcao> funcoes) {
-		this.funcoes = funcoes;
-	}
+    public void setFuncoes(Set<Funcao> funcoes) {
+        this.funcoes = funcoes;
+    }
 
-	public String getConvite() {
-		return convite;
-	}
+    public String getConvite() {
+        return convite;
+    }
 
-	public void setConvite(String convite) {
-		this.convite = convite;
-	}
+    public void setConvite(String convite) {
+        this.convite = convite;
+    }
 
-	public LocalDateTime getDataHoraConvite() {
-		return dataHoraConvite;
-	}
+    public LocalDateTime getDataHoraConvite() {
+        return dataHoraConvite;
+    }
 
-	public void setDataHoraConvite(LocalDateTime dataHoraConvite) {
-		this.dataHoraConvite = dataHoraConvite;
-	}
+    public void setDataHoraConvite(LocalDateTime dataHoraConvite) {
+        this.dataHoraConvite = dataHoraConvite;
+    }
 
-	public Set<Permissao> getPermissoes() {
-		return permissoes;
-	}
+    public Set<Permissao> getPermissoes() {
+        return permissoes;
+    }
 
-	public void setPermissoes(Set<Permissao> permissoes) {
-		this.permissoes = permissoes;
-	}
+    public void setPermissoes(Set<Permissao> permissoes) {
+        this.permissoes = permissoes;
+    }
 
-	public InstituicaoDeEnsino getInstituicao() {
-		return instituicao;
-	}
+    public InstituicaoDeEnsino getInstituicao() {
+        return instituicao;
+    }
 
-	public void setInstituicao(InstituicaoDeEnsino instituicao) {
-		this.instituicao = instituicao;
-	}
-	
+    public void setInstituicao(InstituicaoDeEnsino instituicao) {
+        this.instituicao = instituicao;
+    }
+
 }

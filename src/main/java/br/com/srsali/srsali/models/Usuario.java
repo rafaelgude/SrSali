@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CollectionTable;
+import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,7 +15,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import br.com.srsali.srsali.enums.Funcoes;
+import br.com.srsali.srsali.enums.Funcao;
+import br.com.srsali.srsali.enums.Permissao;
 
 @Entity
 public class Usuario implements Serializable {
@@ -32,16 +34,19 @@ public class Usuario implements Serializable {
 	
 	private	String telefone;
 	
-	@ElementCollection(targetClass = Funcoes.class)
+	@ElementCollection(targetClass = Funcao.class)
 	@CollectionTable(name = "usuario_funcao", joinColumns = @JoinColumn(name = "usuario_id"))
-	private	Set<Funcoes> funcoes = new HashSet<>();
+	@Column(name = "funcao_id")
+	private	Set<Funcao> funcoes = new HashSet<>();
 	
 	private	String convite;
 	
 	private	LocalDateTime dataHoraConvite;
 	
-//	@Enumerated
-//	private	Set<Permissoes> permissoes;
+	@ElementCollection(targetClass = Permissao.class)
+	@CollectionTable(name = "usuario_permissao", joinColumns = @JoinColumn(name = "usuario_id"))
+	@Column(name = "permissao_id")
+	private	Set<Permissao> permissoes = new HashSet<>();
 	
 	@ManyToOne
 	@JoinColumn(name = "instituicao_id")
@@ -49,7 +54,7 @@ public class Usuario implements Serializable {
 
 	public Usuario() {
 		super();
-		this.funcoes.add(Funcoes.USUARIO);
+		this.funcoes.add(Funcao.USUARIO);
 	}
 
 	public long getId() {
@@ -92,11 +97,11 @@ public class Usuario implements Serializable {
 		this.telefone = telefone;
 	}
 
-	public Set<Funcoes> getFuncoes() {
+	public Set<Funcao> getFuncoes() {
 		return funcoes;
 	}
 
-	public void setFuncoes(Set<Funcoes> funcoes) {
+	public void setFuncoes(Set<Funcao> funcoes) {
 		this.funcoes = funcoes;
 	}
 
@@ -116,13 +121,13 @@ public class Usuario implements Serializable {
 		this.dataHoraConvite = dataHoraConvite;
 	}
 
-//	public Set<Permissoes> getPermissoes() {
-//		return permissoes;
-//	}
-//
-//	public void setPermissoes(Set<Permissoes> permissoes) {
-//		this.permissoes = permissoes;
-//	}
+	public Set<Permissao> getPermissoes() {
+		return permissoes;
+	}
+
+	public void setPermissoes(Set<Permissao> permissoes) {
+		this.permissoes = permissoes;
+	}
 
 	public InstituicaoDeEnsino getInstituicao() {
 		return instituicao;

@@ -1,6 +1,6 @@
 package br.com.srsali.srsali.enums;
 
-public enum Funcoes {
+public enum Funcao {
 	USUARIO,
 	OPERADOR,
 	ADMINISTRADOR;

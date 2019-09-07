@@ -1,5 +1,5 @@
 package br.com.srsali.srsali.enums;
 
-public enum Permissoes {
+public enum Permissao {
 	
 }

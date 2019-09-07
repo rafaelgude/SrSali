@@ -19,11 +19,11 @@ public class Curso implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	
-	private	String nome;
+	private String nome;
 	
-	private	InstituicaoDeEnsino	instituicao;
+	private InstituicaoDeEnsino instituicao;
 	
-	private	boolean	ativo;
+	private boolean ativo;
 	
 	@ManyToMany
 	@JoinTable(name = "curso_disciplina", 

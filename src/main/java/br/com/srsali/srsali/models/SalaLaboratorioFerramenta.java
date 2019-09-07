@@ -15,11 +15,11 @@ public class SalaLaboratorioFerramenta implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	
-	private	Ferramenta ferramenta;
+	private Ferramenta ferramenta;
 
-	private	SalaLaboratorio	salaLaboratorio;
+	private SalaLaboratorio salaLaboratorio;
 
-	private	int	quantidade;
+	private int quantidade;
 
 	public long getId() {
 		return id;

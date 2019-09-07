@@ -26,31 +26,31 @@ public class Usuario implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	
-	private	String nome;
+	private String nome;
 	
-	private	String email;
+	private String email;
 	
-	private	String senha;
+	private String senha;
 	
-	private	String telefone;
+	private String telefone;
 	
 	@ElementCollection(targetClass = Funcao.class)
 	@CollectionTable(name = "usuario_funcao", joinColumns = @JoinColumn(name = "usuario_id"))
 	@Column(name = "funcao_id")
-	private	Set<Funcao> funcoes = new HashSet<>();
+	private Set<Funcao> funcoes = new HashSet<>();
 	
-	private	String convite;
+	private String convite;
 	
-	private	LocalDateTime dataHoraConvite;
+	private LocalDateTime dataHoraConvite;
 	
 	@ElementCollection(targetClass = Permissao.class)
 	@CollectionTable(name = "usuario_permissao", joinColumns = @JoinColumn(name = "usuario_id"))
 	@Column(name = "permissao_id")
-	private	Set<Permissao> permissoes = new HashSet<>();
+	private Set<Permissao> permissoes = new HashSet<>();
 	
 	@ManyToOne
 	@JoinColumn(name = "instituicao_id")
-	private	InstituicaoDeEnsino	instituicao;
+	private InstituicaoDeEnsino instituicao;
 
 	public Usuario() {
 		super();

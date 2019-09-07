@@ -15,11 +15,11 @@ public class Ferramenta implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	
-	private	String nome;
+	private String nome;
 
-	private	InstituicaoDeEnsino	instituicao;
+	private InstituicaoDeEnsino instituicao;
 
-	private	boolean	ativo;
+	private boolean ativo;
 
 	public long getId() {
 		return id;

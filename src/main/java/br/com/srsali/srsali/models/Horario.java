@@ -16,15 +16,15 @@ public class Horario implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	
-	private	int	nome;
+	private int nome;
 
-	private	int	turno;
+	private int turno;
 
-	private	LocalTime horaInicio;
+	private LocalTime horaInicio;
 
-	private	LocalTime horaFim;
+	private LocalTime horaFim;
 
-	private	InstituicaoDeEnsino	instituicao;
+	private InstituicaoDeEnsino instituicao;
 
 	public long getId() {
 		return id;

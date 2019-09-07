@@ -15,15 +15,15 @@ public class Professor implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	
-	private	String email;
+	private String email;
 	
-	private	String nome;
+	private String nome;
 	
-	private	Usuario	usuario;
+	private Usuario usuario;
 	
-	private	InstituicaoDeEnsino	instituicao;
+	private InstituicaoDeEnsino instituicao;
 	
-	private	boolean	ativo;
+	private boolean ativo;
 
 	public long getId() {
 		return id;

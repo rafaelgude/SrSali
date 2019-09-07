@@ -16,23 +16,23 @@ public class Reserva implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	
-	private	Turma turmas;
+	private Turma turmas;
 
-	private	SalaLaboratorio	salaLaboratorio;
+	private SalaLaboratorio salaLaboratorio;
 
-	private	InstituicaoDeEnsino	instituicao;
+	private InstituicaoDeEnsino instituicao;
 
-	private	int	turno;
+	private int turno;
 
-	private	Horario	horario;
+	private Horario horario;
 
-	private	Professor professor;
+	private Professor professor;
 
-	private	Disciplina disciplina;
+	private Disciplina disciplina;
 
-	private	LocalDate data;
+	private LocalDate data;
 
-	private	boolean	preReserva;
+	private boolean preReserva;
 
 	public long getId() {
 		return id;

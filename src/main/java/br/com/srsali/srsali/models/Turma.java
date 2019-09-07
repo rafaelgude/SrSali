@@ -15,13 +15,13 @@ public class Turma implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	
-	private	String nome;
+	private String nome;
 
-	private	Curso curso;
+	private Curso curso;
 
-	private	int	quantidadeAlunos;
+	private int quantidadeAlunos;
 
-	private	boolean	ativo;
+	private boolean ativo;
 
 	public long getId() {
 		return id;

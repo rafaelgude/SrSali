@@ -15,15 +15,15 @@ public class SalaLaboratorio implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	
-	private	int	nome;
+	private int nome;
 
-	private	int	capacidadeAlunos;
+	private int capacidadeAlunos;
 
-	private	InstituicaoDeEnsino	instituicao;
+	private InstituicaoDeEnsino instituicao;
 
-	private	boolean	isSala;
+	private boolean isSala;
 
-	private	boolean	ativo;
+	private boolean ativo;
 
 	public long getId() {
 		return id;

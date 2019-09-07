@@ -1,12 +1,20 @@
 package br.com.srsali.srsali.models;
 
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.persistence.CollectionTable;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
+import br.com.srsali.srsali.enums.Funcoes;
 
 @Entity
 public class Usuario implements Serializable {
@@ -16,23 +24,33 @@ public class Usuario implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	
-	private	Turma turmas;
-
-	private	SalaLaboratorio	salaLaboratorio;
-
+	private	String nome;
+	
+	private	String email;
+	
+	private	String senha;
+	
+	private	String telefone;
+	
+	@ElementCollection(targetClass = Funcoes.class)
+	@CollectionTable(name = "usuario_funcao", joinColumns = @JoinColumn(name = "usuario_id"))
+	private	Set<Funcoes> funcoes = new HashSet<>();
+	
+	private	String convite;
+	
+	private	LocalDateTime dataHoraConvite;
+	
+//	@Enumerated
+//	private	Set<Permissoes> permissoes;
+	
+	@ManyToOne
+	@JoinColumn(name = "instituicao_id")
 	private	InstituicaoDeEnsino	instituicao;
 
-	private	int	turno;
-
-	private	Horario	horario;
-
-	private	Professor professor;
-
-	private	Disciplina disciplina;
-
-	private	LocalDate data;
-
-	private	boolean	preReserva;
+	public Usuario() {
+		super();
+		this.funcoes.add(Funcoes.USUARIO);
+	}
 
 	public long getId() {
 		return id;
@@ -42,21 +60,69 @@ public class Usuario implements Serializable {
 		this.id = id;
 	}
 
-	public Turma getTurmas() {
-		return turmas;
+	public String getNome() {
+		return nome;
 	}
 
-	public void setTurmas(Turma turmas) {
-		this.turmas = turmas;
+	public void setNome(String nome) {
+		this.nome = nome;
 	}
 
-	public SalaLaboratorio getSalaLaboratorio() {
-		return salaLaboratorio;
+	public String getEmail() {
+		return email;
 	}
 
-	public void setSalaLaboratorio(SalaLaboratorio salaLaboratorio) {
-		this.salaLaboratorio = salaLaboratorio;
+	public void setEmail(String email) {
+		this.email = email;
 	}
+
+	public String getSenha() {
+		return senha;
+	}
+
+	public void setSenha(String senha) {
+		this.senha = senha;
+	}
+
+	public String getTelefone() {
+		return telefone;
+	}
+
+	public void setTelefone(String telefone) {
+		this.telefone = telefone;
+	}
+
+	public Set<Funcoes> getFuncoes() {
+		return funcoes;
+	}
+
+	public void setFuncoes(Set<Funcoes> funcoes) {
+		this.funcoes = funcoes;
+	}
+
+	public String getConvite() {
+		return convite;
+	}
+
+	public void setConvite(String convite) {
+		this.convite = convite;
+	}
+
+	public LocalDateTime getDataHoraConvite() {
+		return dataHoraConvite;
+	}
+
+	public void setDataHoraConvite(LocalDateTime dataHoraConvite) {
+		this.dataHoraConvite = dataHoraConvite;
+	}
+
+//	public Set<Permissoes> getPermissoes() {
+//		return permissoes;
+//	}
+//
+//	public void setPermissoes(Set<Permissoes> permissoes) {
+//		this.permissoes = permissoes;
+//	}
 
 	public InstituicaoDeEnsino getInstituicao() {
 		return instituicao;
@@ -64,54 +130,6 @@ public class Usuario implements Serializable {
 
 	public void setInstituicao(InstituicaoDeEnsino instituicao) {
 		this.instituicao = instituicao;
-	}
-
-	public int getTurno() {
-		return turno;
-	}
-
-	public void setTurno(int turno) {
-		this.turno = turno;
-	}
-
-	public Horario getHorario() {
-		return horario;
-	}
-
-	public void setHorario(Horario horario) {
-		this.horario = horario;
-	}
-
-	public Professor getProfessor() {
-		return professor;
-	}
-
-	public void setProfessor(Professor professor) {
-		this.professor = professor;
-	}
-
-	public Disciplina getDisciplina() {
-		return disciplina;
-	}
-
-	public void setDisciplina(Disciplina disciplina) {
-		this.disciplina = disciplina;
-	}
-
-	public LocalDate getData() {
-		return data;
-	}
-
-	public void setData(LocalDate data) {
-		this.data = data;
-	}
-
-	public boolean isPreReserva() {
-		return preReserva;
-	}
-
-	public void setPreReserva(boolean preReserva) {
-		this.preReserva = preReserva;
 	}
 	
 }

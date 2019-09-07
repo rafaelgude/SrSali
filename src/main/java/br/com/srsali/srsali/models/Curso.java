@@ -1,11 +1,15 @@
 package br.com.srsali.srsali.models;
 
 import java.io.Serializable;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 
 @Entity
 public class Curso implements Serializable {
@@ -20,6 +24,12 @@ public class Curso implements Serializable {
 	private	InstituicaoDeEnsino	instituicao;
 	
 	private	boolean	ativo;
+	
+	@ManyToMany
+	@JoinTable(name = "curso_disciplina", 
+			   joinColumns = @JoinColumn(name = "curso_id"), 
+			   inverseJoinColumns = @JoinColumn(name = "disciplina_id"))
+	private Set<Disciplina> disciplinas;
 
 	public long getId() {
 		return id;

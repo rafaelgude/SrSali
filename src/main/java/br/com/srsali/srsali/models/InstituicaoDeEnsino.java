@@ -17,19 +17,7 @@ public class InstituicaoDeEnsino implements Serializable {
 	
 	private String nome;
 	
-	private Usuario criador;
-	
 	private boolean ativo;
-	
-	public InstituicaoDeEnsino() {
-	}
-	
-	public InstituicaoDeEnsino(String nome, Usuario criador, boolean ativo) {
-		super();
-		this.nome = nome;
-		this.criador = criador;
-		this.ativo = ativo;
-	}
 	
 	public long getId() {
 		return id;
@@ -45,14 +33,6 @@ public class InstituicaoDeEnsino implements Serializable {
 	
 	public void setNome(String nome) {
 		this.nome = nome;
-	}
-	
-	public Usuario getCriador() {
-		return criador;
-	}
-	
-	public void setCriador(Usuario criador) {
-		this.criador = criador;
 	}
 	
 	public boolean isAtivo() {

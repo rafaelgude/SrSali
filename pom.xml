@@ -12,7 +12,7 @@
 	<artifactId>srsali</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>SrSali</name>
-	<description>Sistema para Reservas de Salas de Aula e Laboratórios de Informática</description>
+	<description>Sistema de Reserva de Salas de Aula e Laboratórios de Informática</description>
 
 	<properties>
 		<java.version>11</java.version>

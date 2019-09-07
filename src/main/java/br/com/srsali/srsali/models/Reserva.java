@@ -1,7 +1,7 @@
 package br.com.srsali.srsali.models;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -16,23 +16,23 @@ public class Reserva implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	
-	private	String nome;
-	
-	private	String email;
-	
-	private	String senha;
-	
-	private	String telefone;
-	
-	private	int	funcao;
-	
-	private	String convite;
-	
-	private	LocalDateTime dataHoraConvite;
-	
-	private	int	permissoes;
-	
+	private	Turma turmas;
+
+	private	SalaLaboratorio	salaLaboratorio;
+
 	private	InstituicaoDeEnsino	instituicao;
+
+	private	int	turno;
+
+	private	Horario	horario;
+
+	private	Professor professor;
+
+	private	Disciplina disciplina;
+
+	private	LocalDate data;
+
+	private	boolean	preReserva;
 
 	public long getId() {
 		return id;
@@ -42,68 +42,20 @@ public class Reserva implements Serializable {
 		this.id = id;
 	}
 
-	public String getNome() {
-		return nome;
+	public Turma getTurmas() {
+		return turmas;
 	}
 
-	public void setNome(String nome) {
-		this.nome = nome;
+	public void setTurmas(Turma turmas) {
+		this.turmas = turmas;
 	}
 
-	public String getEmail() {
-		return email;
+	public SalaLaboratorio getSalaLaboratorio() {
+		return salaLaboratorio;
 	}
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public String getSenha() {
-		return senha;
-	}
-
-	public void setSenha(String senha) {
-		this.senha = senha;
-	}
-
-	public String getTelefone() {
-		return telefone;
-	}
-
-	public void setTelefone(String telefone) {
-		this.telefone = telefone;
-	}
-
-	public int getFuncao() {
-		return funcao;
-	}
-
-	public void setFuncao(int funcao) {
-		this.funcao = funcao;
-	}
-
-	public String getConvite() {
-		return convite;
-	}
-
-	public void setConvite(String convite) {
-		this.convite = convite;
-	}
-
-	public LocalDateTime getDataHoraConvite() {
-		return dataHoraConvite;
-	}
-
-	public void setDataHoraConvite(LocalDateTime dataHoraConvite) {
-		this.dataHoraConvite = dataHoraConvite;
-	}
-
-	public int getPermissoes() {
-		return permissoes;
-	}
-
-	public void setPermissoes(int permissoes) {
-		this.permissoes = permissoes;
+	public void setSalaLaboratorio(SalaLaboratorio salaLaboratorio) {
+		this.salaLaboratorio = salaLaboratorio;
 	}
 
 	public InstituicaoDeEnsino getInstituicao() {
@@ -112,6 +64,54 @@ public class Reserva implements Serializable {
 
 	public void setInstituicao(InstituicaoDeEnsino instituicao) {
 		this.instituicao = instituicao;
+	}
+
+	public int getTurno() {
+		return turno;
+	}
+
+	public void setTurno(int turno) {
+		this.turno = turno;
+	}
+
+	public Horario getHorario() {
+		return horario;
+	}
+
+	public void setHorario(Horario horario) {
+		this.horario = horario;
+	}
+
+	public Professor getProfessor() {
+		return professor;
+	}
+
+	public void setProfessor(Professor professor) {
+		this.professor = professor;
+	}
+
+	public Disciplina getDisciplina() {
+		return disciplina;
+	}
+
+	public void setDisciplina(Disciplina disciplina) {
+		this.disciplina = disciplina;
+	}
+
+	public LocalDate getData() {
+		return data;
+	}
+
+	public void setData(LocalDate data) {
+		this.data = data;
+	}
+
+	public boolean isPreReserva() {
+		return preReserva;
+	}
+
+	public void setPreReserva(boolean preReserva) {
+		this.preReserva = preReserva;
 	}
 	
 }

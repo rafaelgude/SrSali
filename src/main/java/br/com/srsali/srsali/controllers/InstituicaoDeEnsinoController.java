@@ -4,12 +4,15 @@ import java.util.Set;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import br.com.srsali.srsali.enums.Funcao;
 import br.com.srsali.srsali.enums.Permissao;
@@ -41,8 +44,8 @@ public class InstituicaoDeEnsinoController {
 	}
 	
 	@PutMapping
-    public ResponseEntity<Void> alterar(@RequestBody InstituicaoDeEnsino instituicao) throws NotFoundException {
-	    var novaInstituicao = instituicaoRepo.findById(instituicao.getId()).orElseThrow(() -> new NotFoundException("Instituição não encontrada."));
+    public ResponseEntity<Void> alterar(@RequestParam long id, @RequestBody InstituicaoDeEnsino instituicao) throws NotFoundException {
+	    var novaInstituicao = instituicaoRepo.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Instituição não encontrada."));
 	    BeanUtils.copyProperties(instituicao, novaInstituicao, "id");
 	    instituicaoRepo.save(novaInstituicao);
 	    

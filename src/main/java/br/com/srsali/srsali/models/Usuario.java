@@ -15,8 +15,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import br.com.srsali.srsali.enums.Funcao;
 import br.com.srsali.srsali.enums.Permissao;
 
@@ -48,7 +46,6 @@ public class Usuario implements Serializable {
 	@ElementCollection(targetClass = Permissao.class)
     @CollectionTable(name = "usuario_permissao", joinColumns = @JoinColumn(name = "usuario_id"))
     @Column(name = "permissao_id")
-	@JsonProperty("permissoes")
     private Set<Permissao> permissoes = new HashSet<>();
 	
 	@ManyToOne

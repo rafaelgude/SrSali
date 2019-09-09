@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class Curso implements Serializable {
@@ -21,6 +22,8 @@ public class Curso implements Serializable {
 	
 	private String nome;
 	
+	@ManyToOne
+    @JoinColumn(name = "instituicao_id")
 	private InstituicaoDeEnsino instituicao;
 	
 	private boolean ativo;

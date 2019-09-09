@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class Reserva implements Serializable {
@@ -20,6 +22,8 @@ public class Reserva implements Serializable {
 
 	private SalaLaboratorio salaLaboratorio;
 
+	@ManyToOne
+    @JoinColumn(name = "instituicao_id")
 	private InstituicaoDeEnsino instituicao;
 
 	private int turno;

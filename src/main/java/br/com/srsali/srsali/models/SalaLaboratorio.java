@@ -9,6 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 public class SalaLaboratorio implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -21,6 +23,7 @@ public class SalaLaboratorio implements Serializable {
 
 	private int capacidadeAlunos;
 
+	@JsonIgnore
 	@ManyToOne
     @JoinColumn(name = "instituicao_id")
 	private InstituicaoDeEnsino instituicao;

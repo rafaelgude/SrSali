@@ -15,6 +15,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.common.collect.Sets;
+
 import br.com.srsali.srsali.enums.Funcao;
 import br.com.srsali.srsali.enums.Permissao;
 
@@ -37,7 +40,7 @@ public class Usuario implements Serializable {
 	@ElementCollection(targetClass = Funcao.class)
 	@CollectionTable(name = "usuario_funcao", joinColumns = @JoinColumn(name = "usuario_id"))
 	@Column(name = "funcao_id")
-	private Set<Funcao> funcoes = new HashSet<>();
+	private Set<Funcao> funcoes = Sets.newHashSet(Funcao.USUARIO);
 	
 	private String convite;
 	
@@ -48,14 +51,23 @@ public class Usuario implements Serializable {
     @Column(name = "permissao_id")
     private Set<Permissao> permissoes = new HashSet<>();
 	
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "instituicao_id")
 	private InstituicaoDeEnsino instituicao;
 
 	public Usuario() {
-		super();
-		this.funcoes.add(Funcao.USUARIO);
 	}
+	
+    public Usuario(String nome, String email, String senha, String telefone, InstituicaoDeEnsino instituicao) {
+        super();
+        this.nome = nome;
+        this.email = email;
+        this.senha = senha;
+        this.telefone = telefone;
+        this.instituicao = instituicao;
+        
+    }
 
     public long getId() {
         return id;

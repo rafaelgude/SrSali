@@ -5,11 +5,11 @@ import java.util.Set;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.srsali.srsali.enums.Funcao;
@@ -19,10 +19,9 @@ import br.com.srsali.srsali.models.Usuario;
 import br.com.srsali.srsali.repositories.InstituicaoDeEnsinoRepository;
 import br.com.srsali.srsali.repositories.UsuarioRepository;
 import br.com.srsali.srsali.utils.DaoUtils;
-import javassist.NotFoundException;
 
 @RestController
-@RequestMapping("/instituicao")
+@RequestMapping("/instituicoes")
 public class InstituicaoDeEnsinoController {
 	
 	@Autowired InstituicaoDeEnsinoRepository instituicaoRepo;
@@ -42,13 +41,13 @@ public class InstituicaoDeEnsinoController {
 		return ResponseEntity.created(null).build();
 	}
 	
-	@PutMapping
-    public ResponseEntity<Void> alterar(@RequestParam long id, @RequestBody InstituicaoDeEnsino instituicao) throws NotFoundException {
+	@PutMapping("/{id}")
+    public ResponseEntity<Void> alterar(@PathVariable long id, @RequestBody InstituicaoDeEnsino instituicao) {
 	    var novaInstituicao = DaoUtils.find(instituicaoRepo, id, "Instituição não encontrada.");
 	    BeanUtils.copyProperties(instituicao, novaInstituicao, "id");
 	    instituicaoRepo.save(novaInstituicao);
 	    
-        return ResponseEntity.created(null).build();
+        return ResponseEntity.noContent().build();
     }
 	
 }

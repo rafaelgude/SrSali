@@ -19,7 +19,16 @@ public class InstituicaoDeEnsino implements Serializable {
 	
 	private boolean ativo;
 	
-	public long getId() {
+	public InstituicaoDeEnsino() {
+    }
+	
+    public InstituicaoDeEnsino(String nome, boolean ativo) {
+        super();
+        this.nome = nome;
+        this.ativo = ativo;
+    }
+
+    public long getId() {
 		return id;
 	}
 	

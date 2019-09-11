@@ -16,46 +16,45 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.srsali.srsali.exceptions.DataIntegrityException;
-import br.com.srsali.srsali.models.Professor;
+import br.com.srsali.srsali.models.Horario;
+import br.com.srsali.srsali.repositories.HorarioRepository;
 import br.com.srsali.srsali.repositories.InstituicaoDeEnsinoRepository;
-import br.com.srsali.srsali.repositories.ProfessorRepository;
 import br.com.srsali.srsali.repositories.UsuarioRepository;
 import br.com.srsali.srsali.utils.DaoUtils;
 
 @RestController
-@RequestMapping("/professores")
-public class ProfessorController {
+@RequestMapping("/horarios")
+public class HorarioController {
 	
-    @Autowired ProfessorRepository professorRepo;
+    @Autowired HorarioRepository horarioRepo;
 	@Autowired UsuarioRepository usuarioRepo;
 	@Autowired InstituicaoDeEnsinoRepository instituicaoRepo;
 	
 	@GetMapping
-	public ResponseEntity<Iterable<Professor>> listar() {
-	    return ResponseEntity.ok().body(professorRepo.findAll());
+	public ResponseEntity<Iterable<Horario>> listar() {
+	    return ResponseEntity.ok().body(horarioRepo.findAll());
 	}
 	
 	@GetMapping("/{id}")
-    public ResponseEntity<Professor> buscar(@PathVariable long id) {
-        return ResponseEntity.ok().body(DaoUtils.find(professorRepo, id, "Professor não encontrado."));
+    public ResponseEntity<Horario> buscar(@PathVariable long id) {
+        return ResponseEntity.ok().body(DaoUtils.find(horarioRepo, id, "Horario não encontrado."));
     }
 
 	@PostMapping
-	public ResponseEntity<Void> incluir(@RequestBody List<Professor> professores) {
-	    professores.forEach(professor -> {
-	        professor.setUsuario(professor.getUsuario() == null ? null : DaoUtils.find(usuarioRepo, professor.getUsuario().getId(), "Usuário não encontrado."));
-	        professor.setInstituicao(DaoUtils.find(instituicaoRepo, 1, "Instituição não encontrada."));
-	        professorRepo.save(professor);
+	public ResponseEntity<Void> incluir(@RequestBody List<Horario> horarios) {
+	    horarios.forEach(horario -> {
+	        horario.setInstituicao(DaoUtils.find(instituicaoRepo, 1, "Instituição não encontrada."));
+	        horarioRepo.save(horario);
 	    });
 		
 		return ResponseEntity.created(null).build();
 	}
 	
 	@PutMapping("/{id}")
-    public ResponseEntity<Void> alterar(@PathVariable long id, @RequestBody Professor professor) {
-	    var novoProfessor = DaoUtils.find(professorRepo, id, "Professor não encontrado.");
-	    BeanUtils.copyProperties(professor, novoProfessor, "id", "instituicao");
-	    professorRepo.save(novoProfessor);
+    public ResponseEntity<Void> alterar(@PathVariable long id, @RequestBody Horario horario) {
+	    var novoHorario = DaoUtils.find(horarioRepo, id, "Horario não encontrado.");
+	    BeanUtils.copyProperties(horario, novoHorario, "id", "instituicao");
+	    horarioRepo.save(novoHorario);
 	    
         return ResponseEntity.noContent().build();
     }
@@ -63,9 +62,9 @@ public class ProfessorController {
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> excluir(@PathVariable long id) {
 	    try {
-	        professorRepo.delete(DaoUtils.find(professorRepo, id, "Professor não encontrado."));
+	        horarioRepo.delete(DaoUtils.find(horarioRepo, id, "Horario não encontrado."));
 	    } catch (DataIntegrityViolationException e) {
-	        throw new DataIntegrityException("Não é possível excluir um Professor que possui vínculo com outros cadastros.");
+	        throw new DataIntegrityException("Não é possível excluir um Horario que possui vínculo com outros cadastros.");
 	    }
 	    
 	    return ResponseEntity.noContent().build();

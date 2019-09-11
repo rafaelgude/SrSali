@@ -2,6 +2,7 @@ package br.com.srsali.srsali.models;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -20,9 +21,9 @@ public class Reserva implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	
-	private Turma turmas;
+	private Set<Turma> turmas;
 
-	private SalaLaboratorio salaLaboratorio;
+	private Ambiente ambiente;
 
 	@JsonIgnore
 	@ManyToOne
@@ -41,84 +42,84 @@ public class Reserva implements Serializable {
 
 	private boolean preReserva;
 
-	public long getId() {
-		return id;
-	}
+    public long getId() {
+        return id;
+    }
 
-	public void setId(long id) {
-		this.id = id;
-	}
+    public void setId(long id) {
+        this.id = id;
+    }
 
-	public Turma getTurmas() {
-		return turmas;
-	}
+    public Set<Turma> getTurmas() {
+        return turmas;
+    }
 
-	public void setTurmas(Turma turmas) {
-		this.turmas = turmas;
-	}
+    public void setTurmas(Set<Turma> turmas) {
+        this.turmas = turmas;
+    }
 
-	public SalaLaboratorio getSalaLaboratorio() {
-		return salaLaboratorio;
-	}
+    public Ambiente getAmbiente() {
+        return ambiente;
+    }
 
-	public void setSalaLaboratorio(SalaLaboratorio salaLaboratorio) {
-		this.salaLaboratorio = salaLaboratorio;
-	}
+    public void setAmbiente(Ambiente ambiente) {
+        this.ambiente = ambiente;
+    }
 
-	public InstituicaoDeEnsino getInstituicao() {
-		return instituicao;
-	}
+    public InstituicaoDeEnsino getInstituicao() {
+        return instituicao;
+    }
 
-	public void setInstituicao(InstituicaoDeEnsino instituicao) {
-		this.instituicao = instituicao;
-	}
+    public void setInstituicao(InstituicaoDeEnsino instituicao) {
+        this.instituicao = instituicao;
+    }
 
-	public int getTurno() {
-		return turno;
-	}
+    public int getTurno() {
+        return turno;
+    }
 
-	public void setTurno(int turno) {
-		this.turno = turno;
-	}
+    public void setTurno(int turno) {
+        this.turno = turno;
+    }
 
-	public Horario getHorario() {
-		return horario;
-	}
+    public Horario getHorario() {
+        return horario;
+    }
 
-	public void setHorario(Horario horario) {
-		this.horario = horario;
-	}
+    public void setHorario(Horario horario) {
+        this.horario = horario;
+    }
 
-	public Professor getProfessor() {
-		return professor;
-	}
+    public Professor getProfessor() {
+        return professor;
+    }
 
-	public void setProfessor(Professor professor) {
-		this.professor = professor;
-	}
+    public void setProfessor(Professor professor) {
+        this.professor = professor;
+    }
 
-	public Disciplina getDisciplina() {
-		return disciplina;
-	}
+    public Disciplina getDisciplina() {
+        return disciplina;
+    }
 
-	public void setDisciplina(Disciplina disciplina) {
-		this.disciplina = disciplina;
-	}
+    public void setDisciplina(Disciplina disciplina) {
+        this.disciplina = disciplina;
+    }
 
-	public LocalDate getData() {
-		return data;
-	}
+    public LocalDate getData() {
+        return data;
+    }
 
-	public void setData(LocalDate data) {
-		this.data = data;
-	}
+    public void setData(LocalDate data) {
+        this.data = data;
+    }
 
-	public boolean isPreReserva() {
-		return preReserva;
-	}
+    public boolean isPreReserva() {
+        return preReserva;
+    }
 
-	public void setPreReserva(boolean preReserva) {
-		this.preReserva = preReserva;
-	}
-	
+    public void setPreReserva(boolean preReserva) {
+        this.preReserva = preReserva;
+    }
+
 }

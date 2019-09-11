@@ -1,12 +1,15 @@
 package br.com.srsali.srsali.models;
 
 import java.io.Serializable;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -27,6 +30,12 @@ public class Disciplina implements Serializable {
 	private InstituicaoDeEnsino instituicao;
 
 	private boolean ativo;
+	
+	@ManyToMany
+    @JoinTable(name = "disciplina_ferramenta", 
+               joinColumns = @JoinColumn(name = "disciplina_id"), 
+               inverseJoinColumns = @JoinColumn(name = "ferramenta_id"))
+    private Set<Ferramenta> ferramentas;
 
 	public long getId() {
 		return id;
@@ -60,4 +69,12 @@ public class Disciplina implements Serializable {
 		this.ativo = ativo;
 	}
 
+    public Set<Ferramenta> getFerramentas() {
+        return ferramentas;
+    }
+
+    public void setFerramentas(Set<Ferramenta> ferramentas) {
+        this.ferramentas = ferramentas;
+    }
+	
 }

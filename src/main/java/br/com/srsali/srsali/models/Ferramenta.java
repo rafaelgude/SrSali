@@ -27,8 +27,18 @@ public class Ferramenta implements Serializable {
 	private InstituicaoDeEnsino instituicao;
 
 	private boolean ativo;
+	
+	public Ferramenta() {
+    }
+	
+    public Ferramenta(String nome, InstituicaoDeEnsino instituicao, boolean ativo) {
+        super();
+        this.nome = nome;
+        this.instituicao = instituicao;
+        this.ativo = ativo;
+    }
 
-	public long getId() {
+    public long getId() {
 		return id;
 	}
 

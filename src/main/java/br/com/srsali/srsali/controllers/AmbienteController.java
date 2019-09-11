@@ -16,46 +16,45 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.srsali.srsali.exceptions.DataIntegrityException;
-import br.com.srsali.srsali.models.Professor;
+import br.com.srsali.srsali.models.Ambiente;
+import br.com.srsali.srsali.repositories.AmbienteRepository;
 import br.com.srsali.srsali.repositories.InstituicaoDeEnsinoRepository;
-import br.com.srsali.srsali.repositories.ProfessorRepository;
 import br.com.srsali.srsali.repositories.UsuarioRepository;
 import br.com.srsali.srsali.utils.DaoUtils;
 
 @RestController
-@RequestMapping("/professores")
-public class ProfessorController {
+@RequestMapping("/ambientes")
+public class AmbienteController {
 	
-    @Autowired ProfessorRepository professorRepo;
+    @Autowired AmbienteRepository ambienteRepo;
 	@Autowired UsuarioRepository usuarioRepo;
 	@Autowired InstituicaoDeEnsinoRepository instituicaoRepo;
 	
 	@GetMapping
-	public ResponseEntity<Iterable<Professor>> listar() {
-	    return ResponseEntity.ok().body(professorRepo.findAll());
+	public ResponseEntity<Iterable<Ambiente>> listar() {
+	    return ResponseEntity.ok().body(ambienteRepo.findAll());
 	}
 	
 	@GetMapping("/{id}")
-    public ResponseEntity<Professor> buscar(@PathVariable long id) {
-        return ResponseEntity.ok().body(DaoUtils.find(professorRepo, id, "Professor não encontrado."));
+    public ResponseEntity<Ambiente> buscar(@PathVariable long id) {
+        return ResponseEntity.ok().body(DaoUtils.find(ambienteRepo, id, "Ambiente não encontrado."));
     }
 
 	@PostMapping
-	public ResponseEntity<Void> incluir(@RequestBody List<Professor> professores) {
-	    professores.forEach(professor -> {
-	        professor.setUsuario(professor.getUsuario() == null ? null : DaoUtils.find(usuarioRepo, professor.getUsuario().getId(), "Usuário não encontrado."));
-	        professor.setInstituicao(DaoUtils.find(instituicaoRepo, 1, "Instituição não encontrada."));
-	        professorRepo.save(professor);
+	public ResponseEntity<Void> incluir(@RequestBody List<Ambiente> ambientes) {
+	    ambientes.forEach(ambiente -> {
+	        ambiente.setInstituicao(DaoUtils.find(instituicaoRepo, 1, "Instituição não encontrada."));
+	        ambienteRepo.save(ambiente);
 	    });
 		
 		return ResponseEntity.created(null).build();
 	}
 	
 	@PutMapping("/{id}")
-    public ResponseEntity<Void> alterar(@PathVariable long id, @RequestBody Professor professor) {
-	    var novoProfessor = DaoUtils.find(professorRepo, id, "Professor não encontrado.");
-	    BeanUtils.copyProperties(professor, novoProfessor, "id", "instituicao");
-	    professorRepo.save(novoProfessor);
+    public ResponseEntity<Void> alterar(@PathVariable long id, @RequestBody Ambiente ambiente) {
+	    var novoAmbiente = DaoUtils.find(ambienteRepo, id, "Ambiente não encontrado.");
+	    BeanUtils.copyProperties(ambiente, novoAmbiente, "id", "instituicao");
+	    ambienteRepo.save(novoAmbiente);
 	    
         return ResponseEntity.noContent().build();
     }
@@ -63,9 +62,9 @@ public class ProfessorController {
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> excluir(@PathVariable long id) {
 	    try {
-	        professorRepo.delete(DaoUtils.find(professorRepo, id, "Professor não encontrado."));
+	        ambienteRepo.delete(DaoUtils.find(ambienteRepo, id, "Ambiente não encontrado."));
 	    } catch (DataIntegrityViolationException e) {
-	        throw new DataIntegrityException("Não é possível excluir um Professor que possui vínculo com outros cadastros.");
+	        throw new DataIntegrityException("Não é possível excluir um Ambiente que possui vínculo com outros cadastros.");
 	    }
 	    
 	    return ResponseEntity.noContent().build();

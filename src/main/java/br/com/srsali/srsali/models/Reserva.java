@@ -2,6 +2,7 @@ package br.com.srsali.srsali.models;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Entity;
@@ -9,6 +10,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -19,9 +22,13 @@ public class Reserva implements Serializable {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long id;
+	private int id;
 	
-	private Set<Turma> turmas;
+	@ManyToMany
+    @JoinTable(name = "reserva_turma", 
+               joinColumns = @JoinColumn(name = "reserva_id"), 
+               inverseJoinColumns = @JoinColumn(name = "turma_id"))
+	private Set<Turma> turmas = new HashSet<>();
 
 	private Ambiente ambiente;
 
@@ -42,11 +49,11 @@ public class Reserva implements Serializable {
 
 	private boolean preReserva;
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 

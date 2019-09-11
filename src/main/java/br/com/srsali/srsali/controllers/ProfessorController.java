@@ -36,7 +36,7 @@ public class ProfessorController {
 	}
 	
 	@GetMapping("/{id}")
-    public ResponseEntity<Professor> buscar(@PathVariable long id) {
+    public ResponseEntity<Professor> buscar(@PathVariable int id) {
         return ResponseEntity.ok().body(DaoUtils.find(professorRepo, id, "Professor não encontrado."));
     }
 
@@ -52,7 +52,7 @@ public class ProfessorController {
 	}
 	
 	@PutMapping("/{id}")
-    public ResponseEntity<Void> alterar(@PathVariable long id, @RequestBody Professor professor) {
+    public ResponseEntity<Void> alterar(@PathVariable int id, @RequestBody Professor professor) {
 	    var novoProfessor = DaoUtils.find(professorRepo, id, "Professor não encontrado.");
 	    BeanUtils.copyProperties(professor, novoProfessor, "id", "instituicao");
 	    professorRepo.save(novoProfessor);
@@ -61,7 +61,7 @@ public class ProfessorController {
     }
 	
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> excluir(@PathVariable long id) {
+	public ResponseEntity<Void> excluir(@PathVariable int id) {
 	    try {
 	        professorRepo.delete(DaoUtils.find(professorRepo, id, "Professor não encontrado."));
 	    } catch (DataIntegrityViolationException e) {

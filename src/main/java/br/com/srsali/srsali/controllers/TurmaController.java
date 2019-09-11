@@ -34,7 +34,7 @@ public class TurmaController {
 	}
 	
 	@GetMapping("/{id}")
-    public ResponseEntity<Turma> buscar(@PathVariable long id) {
+    public ResponseEntity<Turma> buscar(@PathVariable int id) {
         return ResponseEntity.ok().body(DaoUtils.find(turmaRepo, id, "Turma não encontrada."));
     }
 
@@ -45,7 +45,7 @@ public class TurmaController {
 	}
 	
 	@PutMapping("/{id}")
-    public ResponseEntity<Void> alterar(@PathVariable long id, @RequestBody Turma turma) {
+    public ResponseEntity<Void> alterar(@PathVariable int id, @RequestBody Turma turma) {
 	    var novaTurma = DaoUtils.find(turmaRepo, id, "Turma não encontrada.");
 	    BeanUtils.copyProperties(turma, novaTurma, "id");
 	    turmaRepo.save(novaTurma);
@@ -54,7 +54,7 @@ public class TurmaController {
     }
 	
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> excluir(@PathVariable long id) {
+	public ResponseEntity<Void> excluir(@PathVariable int id) {
 	    try {
 	        turmaRepo.delete(DaoUtils.find(turmaRepo, id, "Turma não encontradoa."));
 	    } catch (DataIntegrityViolationException e) {

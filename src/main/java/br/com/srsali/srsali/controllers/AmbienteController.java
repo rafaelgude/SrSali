@@ -36,7 +36,7 @@ public class AmbienteController {
 	}
 	
 	@GetMapping("/{id}")
-    public ResponseEntity<Ambiente> buscar(@PathVariable long id) {
+    public ResponseEntity<Ambiente> buscar(@PathVariable int id) {
         return ResponseEntity.ok().body(DaoUtils.find(ambienteRepo, id, "Ambiente não encontrado."));
     }
 
@@ -51,7 +51,7 @@ public class AmbienteController {
 	}
 	
 	@PutMapping("/{id}")
-    public ResponseEntity<Void> alterar(@PathVariable long id, @RequestBody Ambiente ambiente) {
+    public ResponseEntity<Void> alterar(@PathVariable int id, @RequestBody Ambiente ambiente) {
 	    var novoAmbiente = DaoUtils.find(ambienteRepo, id, "Ambiente não encontrado.");
 	    BeanUtils.copyProperties(ambiente, novoAmbiente, "id", "instituicao");
 	    ambienteRepo.save(novoAmbiente);
@@ -60,7 +60,7 @@ public class AmbienteController {
     }
 	
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> excluir(@PathVariable long id) {
+	public ResponseEntity<Void> excluir(@PathVariable int id) {
 	    try {
 	        ambienteRepo.delete(DaoUtils.find(ambienteRepo, id, "Ambiente não encontrado."));
 	    } catch (DataIntegrityViolationException e) {

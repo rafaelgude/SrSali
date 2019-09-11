@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import br.com.srsali.srsali.models.Horario;
 
 @Repository
-public interface HorarioRepository extends CrudRepository<Horario, Long> {
+public interface HorarioRepository extends CrudRepository<Horario, Integer> {
 
 }

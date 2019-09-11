@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import br.com.srsali.srsali.models.Curso;
 
 @Repository
-public interface CursoRepository extends CrudRepository<Curso, Long> {
+public interface CursoRepository extends CrudRepository<Curso, Integer> {
 
 }

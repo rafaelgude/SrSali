@@ -36,7 +36,7 @@ public class HorarioController {
 	}
 	
 	@GetMapping("/{id}")
-    public ResponseEntity<Horario> buscar(@PathVariable long id) {
+    public ResponseEntity<Horario> buscar(@PathVariable int id) {
         return ResponseEntity.ok().body(DaoUtils.find(horarioRepo, id, "Horario não encontrado."));
     }
 
@@ -51,7 +51,7 @@ public class HorarioController {
 	}
 	
 	@PutMapping("/{id}")
-    public ResponseEntity<Void> alterar(@PathVariable long id, @RequestBody Horario horario) {
+    public ResponseEntity<Void> alterar(@PathVariable int id, @RequestBody Horario horario) {
 	    var novoHorario = DaoUtils.find(horarioRepo, id, "Horario não encontrado.");
 	    BeanUtils.copyProperties(horario, novoHorario, "id", "instituicao");
 	    horarioRepo.save(novoHorario);
@@ -60,7 +60,7 @@ public class HorarioController {
     }
 	
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> excluir(@PathVariable long id) {
+	public ResponseEntity<Void> excluir(@PathVariable int id) {
 	    try {
 	        horarioRepo.delete(DaoUtils.find(horarioRepo, id, "Horario não encontrado."));
 	    } catch (DataIntegrityViolationException e) {

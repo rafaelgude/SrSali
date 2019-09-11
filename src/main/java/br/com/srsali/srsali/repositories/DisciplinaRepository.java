@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import br.com.srsali.srsali.models.Disciplina;
 
 @Repository
-public interface DisciplinaRepository extends CrudRepository<Disciplina, Long> {
+public interface DisciplinaRepository extends CrudRepository<Disciplina, Integer> {
 
 }

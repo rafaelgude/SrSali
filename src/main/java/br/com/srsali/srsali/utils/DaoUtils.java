@@ -6,7 +6,7 @@ import br.com.srsali.srsali.exceptions.ObjectNotFoundException;
 
 public class DaoUtils {
 
-    public static <T> T find(final CrudRepository<T, Long> repository, final long id, final String mensagem) {
+    public static <T> T find(final CrudRepository<T, Integer> repository, final int id, final String mensagem) {
         return repository.findById(id).orElseThrow(() -> new ObjectNotFoundException(mensagem));
     }
     

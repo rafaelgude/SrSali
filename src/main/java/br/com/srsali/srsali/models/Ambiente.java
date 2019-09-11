@@ -20,9 +20,9 @@ public class Ambiente implements Serializable {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long id;
+	private int id;
 	
-	private int nome;
+	private String nome;
 
 	private int capacidadeAlunos;
 
@@ -36,19 +36,19 @@ public class Ambiente implements Serializable {
 
 	private boolean ativo;
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
-    public int getNome() {
+    public String getNome() {
         return nome;
     }
 
-    public void setNome(int nome) {
+    public void setNome(String nome) {
         this.nome = nome;
     }
 

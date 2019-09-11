@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import br.com.srsali.srsali.models.Ferramenta;
 
 @Repository
-public interface FerramentaRepository extends CrudRepository<Ferramenta, Long> {
+public interface FerramentaRepository extends CrudRepository<Ferramenta, Integer> {
 
 }

@@ -42,7 +42,7 @@ public class InstituicaoDeEnsinoController {
 	}
 	
 	@PutMapping("/{id}")
-    public ResponseEntity<Void> alterar(@PathVariable long id, @RequestBody InstituicaoDeEnsino instituicao) {
+    public ResponseEntity<Void> alterar(@PathVariable int id, @RequestBody InstituicaoDeEnsino instituicao) {
 	    var novaInstituicao = DaoUtils.find(instituicaoRepo, id, "Instituição não encontrada.");
 	    BeanUtils.copyProperties(instituicao, novaInstituicao, "id");
 	    instituicaoRepo.save(novaInstituicao);

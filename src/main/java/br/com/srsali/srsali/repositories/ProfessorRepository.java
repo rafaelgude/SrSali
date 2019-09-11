@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import br.com.srsali.srsali.models.Professor;
 
 @Repository
-public interface ProfessorRepository extends CrudRepository<Professor, Long> {
+public interface ProfessorRepository extends CrudRepository<Professor, Integer> {
 
 }

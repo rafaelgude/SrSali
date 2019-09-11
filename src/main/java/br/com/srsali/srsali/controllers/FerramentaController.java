@@ -34,7 +34,7 @@ public class FerramentaController {
 	}
 	
 	@GetMapping("/{id}")
-    public ResponseEntity<Ferramenta> buscar(@PathVariable long id) {
+    public ResponseEntity<Ferramenta> buscar(@PathVariable int id) {
         return ResponseEntity.ok().body(DaoUtils.find(ferramentaRepo, id, "Ferramenta não encontrada."));
     }
 
@@ -49,7 +49,7 @@ public class FerramentaController {
 	}
 	
 	@PutMapping("/{id}")
-    public ResponseEntity<Void> alterar(@PathVariable long id, @RequestBody Ferramenta ferramenta) {
+    public ResponseEntity<Void> alterar(@PathVariable int id, @RequestBody Ferramenta ferramenta) {
 	    var novaFerramenta = DaoUtils.find(ferramentaRepo, id, "Ferramenta não encontrada.");
 	    BeanUtils.copyProperties(ferramenta, novaFerramenta, "id", "instituicao");
 	    ferramentaRepo.save(novaFerramenta);
@@ -58,7 +58,7 @@ public class FerramentaController {
     }
 	
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> excluir(@PathVariable long id) {
+	public ResponseEntity<Void> excluir(@PathVariable int id) {
 	    try {
 	        ferramentaRepo.delete(DaoUtils.find(ferramentaRepo, id, "Ferramenta não encontradoa."));
 	    } catch (DataIntegrityViolationException e) {

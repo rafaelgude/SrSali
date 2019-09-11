@@ -34,7 +34,7 @@ public class DisciplinaController {
 	}
 	
 	@GetMapping("/{id}")
-    public ResponseEntity<Disciplina> buscar(@PathVariable long id) {
+    public ResponseEntity<Disciplina> buscar(@PathVariable int id) {
         return ResponseEntity.ok().body(DaoUtils.find(disciplinaRepo, id, "Disciplina não encontrada."));
     }
 
@@ -49,7 +49,7 @@ public class DisciplinaController {
 	}
 	
 	@PutMapping("/{id}")
-    public ResponseEntity<Void> alterar(@PathVariable long id, @RequestBody Disciplina disciplina) {
+    public ResponseEntity<Void> alterar(@PathVariable int id, @RequestBody Disciplina disciplina) {
 	    var novaDisciplina = DaoUtils.find(disciplinaRepo, id, "Disciplina não encontrada.");
 	    BeanUtils.copyProperties(disciplina, novaDisciplina, "id", "instituicao");
 	    disciplinaRepo.save(novaDisciplina);
@@ -58,7 +58,7 @@ public class DisciplinaController {
     }
 	
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> excluir(@PathVariable long id) {
+	public ResponseEntity<Void> excluir(@PathVariable int id) {
 	    try {
 	        disciplinaRepo.delete(DaoUtils.find(disciplinaRepo, id, "Disciplina não encontradoa."));
 	    } catch (DataIntegrityViolationException e) {

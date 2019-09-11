@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 @Entity
 public class AmbienteFerramenta implements Serializable {
@@ -13,19 +14,21 @@ public class AmbienteFerramenta implements Serializable {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long id;
+	private int id;
 	
+	@OneToOne
 	private Ferramenta ferramenta;
 
+	@OneToOne
 	private Ambiente ambiente;
 
 	private int quantidade;
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 

@@ -36,7 +36,7 @@ public class CursoController {
 	}
 	
 	@GetMapping("/{id}")
-    public ResponseEntity<Curso> buscar(@PathVariable long id) {
+    public ResponseEntity<Curso> buscar(@PathVariable int id) {
         return ResponseEntity.ok().body(DaoUtils.find(cursoRepo, id, "Curso não encontrado."));
     }
 
@@ -51,7 +51,7 @@ public class CursoController {
 	}
 	
 	@PutMapping("/{id}")
-    public ResponseEntity<Void> alterar(@PathVariable long id, @RequestBody Curso curso) {
+    public ResponseEntity<Void> alterar(@PathVariable int id, @RequestBody Curso curso) {
 	    var novoCurso = DaoUtils.find(cursoRepo, id, "Curso não encontrado.");
 	    BeanUtils.copyProperties(curso, novoCurso, "id", "instituicao");
 	    cursoRepo.save(novoCurso);
@@ -60,7 +60,7 @@ public class CursoController {
     }
 	
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> excluir(@PathVariable long id) {
+	public ResponseEntity<Void> excluir(@PathVariable int id) {
 	    try {
 	        cursoRepo.delete(DaoUtils.find(cursoRepo, id, "Curso não encontrado."));
 	    } catch (DataIntegrityViolationException e) {

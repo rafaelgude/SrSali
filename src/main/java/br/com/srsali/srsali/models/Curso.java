@@ -20,7 +20,7 @@ public class Curso implements Serializable {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long id;
+	private int id;
 	
 	private String nome;
 	
@@ -37,11 +37,11 @@ public class Curso implements Serializable {
 			   inverseJoinColumns = @JoinColumn(name = "disciplina_id"))
 	private Set<Disciplina> disciplinas;
 
-	public long getId() {
+	public int getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 

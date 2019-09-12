@@ -6,7 +6,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotNull;
 
 @Entity
 public class AmbienteFerramenta implements Serializable {
@@ -16,13 +18,27 @@ public class AmbienteFerramenta implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
-	@OneToOne
+	@ManyToOne
+    @JoinColumn(name = "ferramenta_id")
+	@NotNull
 	private Ferramenta ferramenta;
 
-	@OneToOne
+	@ManyToOne
+    @JoinColumn(name = "ambiente_id")
+	@NotNull
 	private Ambiente ambiente;
 
 	private int quantidade;
+	
+    public AmbienteFerramenta() {
+    }
+
+    public AmbienteFerramenta(@NotNull Ferramenta ferramenta, @NotNull Ambiente ambiente, int quantidade) {
+        super();
+        this.ferramenta = ferramenta;
+        this.ambiente = ambiente;
+        this.quantidade = quantidade;
+    }
 
     public int getId() {
         return id;

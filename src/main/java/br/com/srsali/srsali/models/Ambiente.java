@@ -1,7 +1,10 @@
 package br.com.srsali.srsali.models;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
@@ -9,8 +12,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import br.com.srsali.srsali.enums.TipoAmbiente;
 
@@ -35,6 +40,22 @@ public class Ambiente implements Serializable {
 	private TipoAmbiente tipoAmbiente = TipoAmbiente.SALA_AULA;
 
 	private boolean ativo;
+	
+	@JsonIgnoreProperties(value = "ambiente")
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "ambiente", orphanRemoval = true)
+	private Set<AmbienteFerramenta> ferramentas = new HashSet<>();
+	
+    public Ambiente() {
+    }
+    
+    public Ambiente(String nome, int capacidadeAlunos, InstituicaoDeEnsino instituicao, TipoAmbiente tipoAmbiente, boolean ativo) {
+        super();
+        this.nome = nome;
+        this.capacidadeAlunos = capacidadeAlunos;
+        this.instituicao = instituicao;
+        this.tipoAmbiente = tipoAmbiente;
+        this.ativo = ativo;
+    }
 
     public int getId() {
         return id;
@@ -82,6 +103,16 @@ public class Ambiente implements Serializable {
 
     public void setAtivo(boolean ativo) {
         this.ativo = ativo;
+    }
+
+    public Set<AmbienteFerramenta> getFerramentas() {
+        return ferramentas;
+    }
+
+    public void setFerramentas(Set<AmbienteFerramenta> ferramentas) {
+        this.ferramentas.clear();
+        this.ferramentas.addAll(ferramentas);
+        this.ferramentas.forEach(x -> x.setAmbiente(this));
     }
 
 }

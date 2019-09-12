@@ -1,6 +1,7 @@
 package br.com.srsali.srsali.models;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Entity;
@@ -13,6 +14,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 public class Curso implements Serializable {
@@ -31,13 +33,25 @@ public class Curso implements Serializable {
 	
 	private boolean ativo;
 	
+	@JsonIgnoreProperties(value = "ferramentas")
 	@ManyToMany
 	@JoinTable(name = "curso_disciplina", 
 			   joinColumns = @JoinColumn(name = "curso_id"), 
 			   inverseJoinColumns = @JoinColumn(name = "disciplina_id"))
-	private Set<Disciplina> disciplinas;
+	private Set<Disciplina> disciplinas = new HashSet<>();
 
-	public int getId() {
+	public Curso() {
+	}
+
+	public Curso(String nome, InstituicaoDeEnsino instituicao, boolean ativo, Set<Disciplina> disciplinas) {
+        super();
+        this.nome = nome;
+        this.instituicao = instituicao;
+        this.ativo = ativo;
+        this.disciplinas = disciplinas;
+    }
+
+    public int getId() {
 		return id;
 	}
 
@@ -68,5 +82,13 @@ public class Curso implements Serializable {
 	public void setAtivo(boolean ativo) {
 		this.ativo = ativo;
 	}
+
+    public Set<Disciplina> getDisciplinas() {
+        return disciplinas;
+    }
+
+    public void setDisciplinas(Set<Disciplina> disciplinas) {
+        this.disciplinas = disciplinas;
+    }
 	
 }

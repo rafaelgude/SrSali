@@ -1,15 +1,24 @@
 package br.com.srsali.srsali.services;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.srsali.srsali.enums.Funcao;
+import br.com.srsali.srsali.enums.TipoAmbiente;
+import br.com.srsali.srsali.models.Ambiente;
+import br.com.srsali.srsali.models.AmbienteFerramenta;
+import br.com.srsali.srsali.models.Curso;
+import br.com.srsali.srsali.models.Disciplina;
 import br.com.srsali.srsali.models.Ferramenta;
 import br.com.srsali.srsali.models.InstituicaoDeEnsino;
 import br.com.srsali.srsali.models.Professor;
 import br.com.srsali.srsali.models.Usuario;
+import br.com.srsali.srsali.repositories.AmbienteRepository;
+import br.com.srsali.srsali.repositories.CursoRepository;
+import br.com.srsali.srsali.repositories.DisciplinaRepository;
 import br.com.srsali.srsali.repositories.FerramentaRepository;
 import br.com.srsali.srsali.repositories.InstituicaoDeEnsinoRepository;
 import br.com.srsali.srsali.repositories.ProfessorRepository;
@@ -29,6 +38,15 @@ public class DBService {
     
     @Autowired
     private FerramentaRepository ferramentaRepo;
+    
+    @Autowired
+    private AmbienteRepository ambienteRepo;
+    
+    @Autowired
+    private DisciplinaRepository disciplinaRepo;
+    
+    @Autowired
+    private CursoRepository cursoRepo;
 
     public void instantiateTestDatabase() {
         var uvv = instituicaoRepo.save(new InstituicaoDeEnsino("UVV", true));
@@ -39,9 +57,29 @@ public class DBService {
         professorRepo.saveAll(List.of(new Professor("erlon@uvv.br", "Erlon", erlon, uvv, true), 
                                       new Professor("susilea@uvv.br", "Susiléa", null, uvv, true)));
         
-        ferramentaRepo.saveAll(List.of(new Ferramenta("Computador", uvv, true),
-                                       new Ferramenta("Quadro", uvv, true),
-                                       new Ferramenta("Mesa", uvv, false)));
+        var computador = new Ferramenta("Computador", uvv, true);
+        var quadro = new Ferramenta("Quadro", uvv, true);
+        var mesa = new Ferramenta("Mesa", uvv, false);
+        
+        ferramentaRepo.saveAll(List.of(computador, quadro, mesa));
+        
+        var lab1 = new Ambiente("Laboratório 1", 30, uvv, TipoAmbiente.LABORATORIO_INFORMATICA, true);
+        lab1.getFerramentas().addAll(List.of(new AmbienteFerramenta(computador, lab1, 30),
+                                             new AmbienteFerramenta(quadro, lab1, 1)));
+        
+        var sala1 = new Ambiente("Sala 1", 25, uvv, TipoAmbiente.SALA_AULA, true);
+        sala1.getFerramentas().addAll(List.of(new AmbienteFerramenta(quadro, sala1, 1),
+                                              new AmbienteFerramenta(mesa, sala1, 5))); 
+        
+        ambienteRepo.saveAll(List.of(lab1, sala1));
+        
+        var labSoRedes = new Disciplina("Laboratório de Redes de S.O.", uvv, true, Set.of(computador, quadro));
+        var calculo = new Disciplina("Cálculo 1", uvv, true, Set.of(quadro, mesa));
+        disciplinaRepo.saveAll(List.of(labSoRedes, calculo));
+        
+        var sistemasInformacao = new Curso("Sistemas de Informação", uvv, true, Set.of(labSoRedes, calculo));
+        cursoRepo.save(sistemasInformacao);
+        
     }
     
 }

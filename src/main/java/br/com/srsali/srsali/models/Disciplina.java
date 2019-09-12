@@ -1,6 +1,7 @@
 package br.com.srsali.srsali.models;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Entity;
@@ -35,9 +36,20 @@ public class Disciplina implements Serializable {
     @JoinTable(name = "disciplina_ferramenta", 
                joinColumns = @JoinColumn(name = "disciplina_id"), 
                inverseJoinColumns = @JoinColumn(name = "ferramenta_id"))
-    private Set<Ferramenta> ferramentas;
+    private Set<Ferramenta> ferramentas = new HashSet<>();
+	
+	public Disciplina() {
+	}
+	
+	public Disciplina(String nome, InstituicaoDeEnsino instituicao, boolean ativo, Set<Ferramenta> ferramentas) {
+        super();
+        this.nome = nome;
+        this.instituicao = instituicao;
+        this.ativo = ativo;
+        this.ferramentas = ferramentas;
+    }
 
-	public int getId() {
+    public int getId() {
 		return id;
 	}
 

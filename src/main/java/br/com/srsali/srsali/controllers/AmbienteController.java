@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,58 +14,43 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.srsali.srsali.exceptions.DataIntegrityException;
 import br.com.srsali.srsali.models.Ambiente;
-import br.com.srsali.srsali.repositories.AmbienteRepository;
-import br.com.srsali.srsali.repositories.InstituicaoDeEnsinoRepository;
-import br.com.srsali.srsali.repositories.UsuarioRepository;
-import br.com.srsali.srsali.utils.DaoUtils;
+import br.com.srsali.srsali.services.AmbienteService;
 
 @RestController
 @RequestMapping("/ambientes")
 public class AmbienteController {
 	
-    @Autowired AmbienteRepository ambienteRepo;
-	@Autowired UsuarioRepository usuarioRepo;
-	@Autowired InstituicaoDeEnsinoRepository instituicaoRepo;
+    @Autowired AmbienteService ambienteService;
 	
 	@GetMapping
-	public ResponseEntity<Iterable<Ambiente>> listar() {
-	    return ResponseEntity.ok().body(ambienteRepo.findAll());
+	public ResponseEntity<List<Ambiente>> findAll() {
+	    return ResponseEntity.ok().body(ambienteService.findAll());
 	}
 	
 	@GetMapping("/{id}")
-    public ResponseEntity<Ambiente> buscar(@PathVariable int id) {
-        return ResponseEntity.ok().body(DaoUtils.find(ambienteRepo, id, "Ambiente não encontrado."));
+    public ResponseEntity<Ambiente> find(@PathVariable int id) {
+        return ResponseEntity.ok().body(ambienteService.find(id));
     }
-
+	
 	@PostMapping
-	public ResponseEntity<Void> incluir(@RequestBody List<Ambiente> ambientes) {
-	    ambientes.forEach(ambiente -> {
-	        ambiente.setInstituicao(DaoUtils.find(instituicaoRepo, 1, "Instituição não encontrada."));
-	        ambienteRepo.save(ambiente);
-	    });
-		
+	public ResponseEntity<Void> insert(@RequestBody List<Ambiente> ambientes) {
+	    ambientes.forEach(ambienteService::insert);
 		return ResponseEntity.created(null).build();
 	}
 	
 	@PutMapping("/{id}")
-    public ResponseEntity<Void> alterar(@PathVariable int id, @RequestBody Ambiente ambiente) {
-	    var novoAmbiente = DaoUtils.find(ambienteRepo, id, "Ambiente não encontrado.");
-	    BeanUtils.copyProperties(ambiente, novoAmbiente, "id", "instituicao");
-	    ambienteRepo.save(novoAmbiente);
+    public ResponseEntity<Void> update(@PathVariable int id, @RequestBody Ambiente ambiente) {
+	    var newAmbiente = ambienteService.find(id);
+	    BeanUtils.copyProperties(ambiente, newAmbiente, "id", "instituicao");
+	    ambienteService.update(newAmbiente);
 	    
         return ResponseEntity.noContent().build();
     }
 	
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> excluir(@PathVariable int id) {
-	    try {
-	        ambienteRepo.delete(DaoUtils.find(ambienteRepo, id, "Ambiente não encontrado."));
-	    } catch (DataIntegrityViolationException e) {
-	        throw new DataIntegrityException("Não é possível excluir um Ambiente que possui vínculo com outros cadastros.");
-	    }
-	    
+	public ResponseEntity<Void> delete(@PathVariable int id) {
+	    ambienteService.delete(id);
 	    return ResponseEntity.noContent().build();
 	}
 }

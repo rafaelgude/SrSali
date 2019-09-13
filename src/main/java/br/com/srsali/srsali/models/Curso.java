@@ -31,7 +31,7 @@ public class Curso implements Serializable {
     @JoinColumn(name = "instituicao_id")
 	private InstituicaoDeEnsino instituicao;
 	
-	private boolean ativo;
+	private boolean ativo = true;
 	
 	@JsonIgnoreProperties(value = "ferramentas")
 	@ManyToMany

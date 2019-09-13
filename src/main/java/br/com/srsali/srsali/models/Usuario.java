@@ -17,6 +17,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.Sets;
 
 import br.com.srsali.srsali.enums.Funcao;
@@ -35,6 +36,7 @@ public class Usuario implements Serializable {
 	@Column(unique = true)
 	private String email;
 	
+	@JsonIgnore
 	private String senha;
 	
 	private String telefone;
@@ -95,10 +97,12 @@ public class Usuario implements Serializable {
         this.email = email;
     }
 
+    @JsonIgnore
     public String getSenha() {
         return senha;
     }
 
+    @JsonProperty
     public void setSenha(String senha) {
         this.senha = senha;
     }

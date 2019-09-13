@@ -7,7 +7,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import br.com.srsali.srsali.repositories.UsuarioRepository;
-import br.com.srsali.srsali.security.UserSS;
+import br.com.srsali.srsali.security.UsuarioJWT;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -20,7 +20,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if (usuario == null)
             throw new UsernameNotFoundException(email);
             
-        return new UserSS(usuario.getId(), usuario.getEmail(), usuario.getSenha(), usuario.getFuncoes());
+        return new UsuarioJWT(usuario.getId(), usuario.getEmail(), usuario.getSenha(), usuario.getFuncoes());
     }
 
 }

@@ -38,12 +38,12 @@ public class DBService {
     @Autowired private CursoRepository cursoRepo;
     @Autowired BCryptPasswordEncoder pe;
 
-    public void instantiateTestDatabase() {
+    public void iniciarBancoTeste() {
         var uvv = instituicaoRepo.save(new InstituicaoDeEnsino("UVV", true));
         
-        var rafael = new Usuario("Rafael", "rafael@gude.com", pe.encode("147258369"), "1234-5678", uvv); 
+        var rafael = new Usuario("Rafael", "rafael@gude.com", pe.encode("112233"), "1234-5678", uvv); 
         var erlon = new Usuario("Erlon", "erlon@uvv.br", pe.encode("123456"), "99999-8888", uvv); 
-        erlon.getFuncoes().add(Funcao.ADMINISTRADOR);
+        erlon.getFuncoes().add(Funcao.ADMIN);
         erlon.getPermissoes().addAll(Set.of(Permissao.values()));
         usuarioRepo.saveAll(List.of(erlon, rafael));
         

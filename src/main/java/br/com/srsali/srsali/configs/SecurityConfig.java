@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -19,38 +20,78 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import br.com.srsali.srsali.security.JWTAuthenticationFilter;
+import br.com.srsali.srsali.security.JWTAuthorizationFilter;
 import br.com.srsali.srsali.security.JWTUtil;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    
-    @Autowired private Environment env;
-    @Autowired private UserDetailsService userDetailsService;
-    @Autowired private JWTUtil jwtUtil;
 
+    @Autowired
+    private UserDetailsService userDetailsService;
+    
+    @Autowired
+    private Environment env;
+    
+    @Autowired
+    private JWTUtil jwtUtil;
+    
     private static final String[] PUBLIC_MATCHERS = {
             "/h2-console/**"
     };
     
     private static final String[] PUBLIC_MATCHERS_GET = {
             "/ambientes/**",
+            "/reservas/**",
             "/usuarios/**"
     };
     
+    private static final String[] PUBLIC_MATCHERS_POST = {
+            "/instituicoes/**"
+    };
+    
+    private static final String[] PRIVATE_MATCHERS_GET = {
+            "/cursos/**",
+            "/disciplinas/**",
+            "/ferramentas/**",
+            "/horarios/**",
+            "/professores/**",
+            "/turmas/**"
+    };
+    
+    private static final String[] PRIVATE_MATCHERS_MODIFY = {
+            "/ambientes/**",
+            "/cursos/**",
+            "/disciplinas/**",
+            "/ferramentas/**",
+            "/horarios/**",
+            "/professores/**",
+            "/turmas/**",
+            "/usuarios/**",
+            "/reservas/**"
+    };
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        if (List.of(env.getActiveProfiles()).contains("test"))
-            http.headers().frameOptions().disable();    
+        if (List.of(env.getActiveProfiles()).contains("test")) 
+            http.headers().frameOptions().disable();
         
         http.cors().and().csrf().disable();
-        
         http.authorizeRequests()
-        .antMatchers(PUBLIC_MATCHERS).permitAll()
-        .antMatchers(HttpMethod.GET, PUBLIC_MATCHERS_GET).permitAll()
-        .anyRequest().authenticated();
+            .antMatchers(HttpMethod.GET, PUBLIC_MATCHERS_GET).permitAll()
+            .antMatchers(HttpMethod.POST, PUBLIC_MATCHERS_POST).permitAll()
+            .antMatchers(HttpMethod.GET, PRIVATE_MATCHERS_GET).hasAnyRole("ADMIN", "OPERADOR", "USUARIO")
+            .antMatchers(HttpMethod.POST, PRIVATE_MATCHERS_MODIFY).hasAnyRole("ADMIN", "OPERADOR")
+            .antMatchers(HttpMethod.PUT, PRIVATE_MATCHERS_MODIFY).hasAnyRole("ADMIN", "OPERADOR")
+            .antMatchers(HttpMethod.DELETE, PRIVATE_MATCHERS_MODIFY).hasAnyRole("ADMIN", "OPERADOR")
+            .antMatchers(HttpMethod.PUT, "/instituicoes/**").hasRole("ADMIN")
+            .antMatchers(HttpMethod.DELETE, "/instituicoes/**").hasRole("ADMIN")
+            .antMatchers(PUBLIC_MATCHERS).permitAll()
+            .anyRequest().authenticated();
         
         http.addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtUtil));
+        http.addFilter(new JWTAuthorizationFilter(authenticationManager(), jwtUtil, userDetailsService));
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
     
@@ -62,7 +103,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         final var source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/***", new CorsConfiguration().applyPermitDefaultValues());
+        source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
         return source;
     }
     
@@ -70,5 +111,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
-    
 }

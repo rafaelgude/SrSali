@@ -25,4 +25,10 @@ public class ResourceExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
     
+    @ExceptionHandler(AuthorizationException.class)
+    public ResponseEntity<Error> handleAuthorization(AuthorizationException ex) {
+        var error = new Error(HttpStatus.FORBIDDEN.value(), ex.getMessage());
+        return new ResponseEntity<>(error, HttpStatus.FORBIDDEN);
+    }
+    
 }

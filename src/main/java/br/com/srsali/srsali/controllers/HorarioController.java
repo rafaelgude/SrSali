@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,58 +14,43 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.srsali.srsali.exceptions.DataIntegrityException;
 import br.com.srsali.srsali.models.Horario;
-import br.com.srsali.srsali.repositories.HorarioRepository;
-import br.com.srsali.srsali.repositories.InstituicaoDeEnsinoRepository;
-import br.com.srsali.srsali.repositories.UsuarioRepository;
-import br.com.srsali.srsali.utils.DaoUtils;
+import br.com.srsali.srsali.services.HorarioService;
 
 @RestController
 @RequestMapping("/horarios")
 public class HorarioController {
 	
-    @Autowired HorarioRepository horarioRepo;
-	@Autowired UsuarioRepository usuarioRepo;
-	@Autowired InstituicaoDeEnsinoRepository instituicaoRepo;
+    @Autowired HorarioService horarioService;
 	
 	@GetMapping
-	public ResponseEntity<Iterable<Horario>> listar() {
-	    return ResponseEntity.ok().body(horarioRepo.findAll());
+	public ResponseEntity<List<Horario>> findAll() {
+	    return ResponseEntity.ok().body(horarioService.findAll());
 	}
 	
 	@GetMapping("/{id}")
-    public ResponseEntity<Horario> buscar(@PathVariable int id) {
-        return ResponseEntity.ok().body(DaoUtils.find(horarioRepo, id, "Horario não encontrado."));
+    public ResponseEntity<Horario> find(@PathVariable int id) {
+        return ResponseEntity.ok().body(horarioService.find(id));
     }
-
+	
 	@PostMapping
-	public ResponseEntity<Void> incluir(@RequestBody List<Horario> horarios) {
-	    horarios.forEach(horario -> {
-	        horario.setInstituicao(DaoUtils.find(instituicaoRepo, 1, "Instituição não encontrada."));
-	        horarioRepo.save(horario);
-	    });
-		
+	public ResponseEntity<Void> insert(@RequestBody List<Horario> horarios) {
+	    horarios.forEach(horarioService::insert);
 		return ResponseEntity.created(null).build();
 	}
 	
 	@PutMapping("/{id}")
-    public ResponseEntity<Void> alterar(@PathVariable int id, @RequestBody Horario horario) {
-	    var novoHorario = DaoUtils.find(horarioRepo, id, "Horario não encontrado.");
-	    BeanUtils.copyProperties(horario, novoHorario, "id", "instituicao");
-	    horarioRepo.save(novoHorario);
+    public ResponseEntity<Void> update(@PathVariable int id, @RequestBody Horario horario) {
+	    var newHorario = horarioService.find(id);
+	    BeanUtils.copyProperties(horario, newHorario, "id", "instituicao");
+	    horarioService.update(newHorario);
 	    
         return ResponseEntity.noContent().build();
     }
 	
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> excluir(@PathVariable int id) {
-	    try {
-	        horarioRepo.delete(DaoUtils.find(horarioRepo, id, "Horario não encontrado."));
-	    } catch (DataIntegrityViolationException e) {
-	        throw new DataIntegrityException("Não é possível excluir um Horario que possui vínculo com outros cadastros.");
-	    }
-	    
+	public ResponseEntity<Void> delete(@PathVariable int id) {
+	    horarioService.delete(id);
 	    return ResponseEntity.noContent().build();
 	}
 }

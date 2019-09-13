@@ -23,7 +23,6 @@ import br.com.srsali.srsali.models.Usuario;
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private AuthenticationManager authenticationManager;
-    
     private JWTUtil jwtUtil;
 
     public JWTAuthenticationFilter(AuthenticationManager authenticationManager, JWTUtil jwtUtil) {
@@ -34,7 +33,6 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     
     @Override
     public Authentication attemptAuthentication(HttpServletRequest req, HttpServletResponse res) throws AuthenticationException {
-
         try {
             var creds = new ObjectMapper().readValue(req.getInputStream(), Usuario.class);
             var authToken = new UsernamePasswordAuthenticationToken(creds.getEmail(), creds.getSenha(), new ArrayList<>());
@@ -48,7 +46,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     
     @Override
     protected void successfulAuthentication(HttpServletRequest req, HttpServletResponse res, FilterChain chain, Authentication auth) throws IOException, ServletException {
-        var username = ((UserSS) auth.getPrincipal()).getUsername();
+        var username = ((UsuarioJWT) auth.getPrincipal()).getUsername();
         var token = jwtUtil.generateToken(username);
         res.addHeader("Authorization", "Bearer " + token);
     }
@@ -69,5 +67,4 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 + "\"path\": \"/login\"}";
         }
     }
-    
 }

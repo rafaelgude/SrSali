@@ -10,7 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import br.com.srsali.srsali.enums.Funcao;
 
-public class UserSS implements UserDetails {
+public class UsuarioJWT implements UserDetails {
     private static final long serialVersionUID = 1L;
     
     private int id;
@@ -18,10 +18,10 @@ public class UserSS implements UserDetails {
     private String senha;
     private Collection<? extends GrantedAuthority> authorities;
     
-    public UserSS() {
+    public UsuarioJWT() {
     }
     
-    public UserSS(int id, String email, String senha, Set<Funcao> funcoes) {
+    public UsuarioJWT(int id, String email, String senha, Set<Funcao> funcoes) {
         super();
         this.id = id;
         this.email = email;
@@ -30,22 +30,22 @@ public class UserSS implements UserDetails {
     }
 
     public int getId() {
-        return this.id;
+        return id;
     }
-
+    
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.authorities;
+        return authorities;
     }
 
     @Override
     public String getPassword() {
-        return this.senha;
+        return senha;
     }
 
     @Override
     public String getUsername() {
-        return this.email;
+        return email;
     }
 
     @Override
@@ -67,5 +67,9 @@ public class UserSS implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
-
+    
+    public boolean hasRole(Funcao funcao) {
+        return getAuthorities().contains(new SimpleGrantedAuthority(funcao.getRole()));
+    }
+    
 }

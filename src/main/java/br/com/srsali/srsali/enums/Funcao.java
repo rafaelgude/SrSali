@@ -3,7 +3,7 @@ package br.com.srsali.srsali.enums;
 public enum Funcao {
 	USUARIO("ROLE_USUARIO"),
 	OPERADOR("ROLE_OPERADOR"),
-	ADMINISTRADOR("ROLE_ADMINISTRADOR");
+	ADMIN("ROLE_ADMIN");
     
     private String role;
     

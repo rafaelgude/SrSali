@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,56 +14,43 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.srsali.srsali.exceptions.DataIntegrityException;
 import br.com.srsali.srsali.models.Disciplina;
-import br.com.srsali.srsali.repositories.DisciplinaRepository;
-import br.com.srsali.srsali.repositories.InstituicaoDeEnsinoRepository;
-import br.com.srsali.srsali.utils.DaoUtils;
+import br.com.srsali.srsali.services.DisciplinaService;
 
 @RestController
 @RequestMapping("/disciplinas")
 public class DisciplinaController {
 	
-    @Autowired DisciplinaRepository disciplinaRepo;
-	@Autowired InstituicaoDeEnsinoRepository instituicaoRepo;
+    @Autowired DisciplinaService disciplinaService;
 	
 	@GetMapping
-	public ResponseEntity<Iterable<Disciplina>> listar() {
-	    return ResponseEntity.ok().body(disciplinaRepo.findAll());
+	public ResponseEntity<List<Disciplina>> findAll() {
+	    return ResponseEntity.ok().body(disciplinaService.findAll());
 	}
 	
 	@GetMapping("/{id}")
-    public ResponseEntity<Disciplina> buscar(@PathVariable int id) {
-        return ResponseEntity.ok().body(DaoUtils.find(disciplinaRepo, id, "Disciplina não encontrada."));
+    public ResponseEntity<Disciplina> find(@PathVariable int id) {
+        return ResponseEntity.ok().body(disciplinaService.find(id));
     }
-
+	
 	@PostMapping
-	public ResponseEntity<Void> incluir(@RequestBody List<Disciplina> disciplinas) {
-	    disciplinas.forEach(disciplina -> {
-	        disciplina.setInstituicao(DaoUtils.find(instituicaoRepo, 1, "Instituição não encontrada."));
-	        disciplinaRepo.save(disciplina);
-	    });
-		
+	public ResponseEntity<Void> insert(@RequestBody List<Disciplina> disciplinas) {
+	    disciplinas.forEach(disciplinaService::insert);
 		return ResponseEntity.created(null).build();
 	}
 	
 	@PutMapping("/{id}")
-    public ResponseEntity<Void> alterar(@PathVariable int id, @RequestBody Disciplina disciplina) {
-	    var novaDisciplina = DaoUtils.find(disciplinaRepo, id, "Disciplina não encontrada.");
-	    BeanUtils.copyProperties(disciplina, novaDisciplina, "id", "instituicao");
-	    disciplinaRepo.save(novaDisciplina);
+    public ResponseEntity<Void> update(@PathVariable int id, @RequestBody Disciplina disciplina) {
+	    var newDisciplina = disciplinaService.find(id);
+	    BeanUtils.copyProperties(disciplina, newDisciplina, "id", "instituicao");
+	    disciplinaService.update(newDisciplina);
 	    
         return ResponseEntity.noContent().build();
     }
 	
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> excluir(@PathVariable int id) {
-	    try {
-	        disciplinaRepo.delete(DaoUtils.find(disciplinaRepo, id, "Disciplina não encontradoa."));
-	    } catch (DataIntegrityViolationException e) {
-	        throw new DataIntegrityException("Não é possível excluir uma Disciplina que possui vínculo com outros cadastros.");
-	    }
-	    
+	public ResponseEntity<Void> delete(@PathVariable int id) {
+	    disciplinaService.delete(id);
 	    return ResponseEntity.noContent().build();
 	}
 }

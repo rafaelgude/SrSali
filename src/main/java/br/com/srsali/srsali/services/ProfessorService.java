@@ -1,9 +1,10 @@
 package br.com.srsali.srsali.services;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import br.com.srsali.srsali.exceptions.DataIntegrityException;
@@ -17,8 +18,8 @@ public class ProfessorService {
     @Autowired ProfessorRepository professorRepo;
     @Autowired UsuarioService usuarioService;
     
-    public List<Professor> findAll() {
-        return professorRepo.findAll();
+    public Page<Professor> findAll(int page, int linesPerPage, String orderBy, String direction) {
+        return professorRepo.findAll(PageRequest.of(page, linesPerPage, Direction.valueOf(direction.toUpperCase()), orderBy));
     }
     
     public Professor find(int id) {

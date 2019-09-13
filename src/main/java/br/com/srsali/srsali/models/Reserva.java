@@ -30,6 +30,8 @@ public class Reserva implements Serializable {
                inverseJoinColumns = @JoinColumn(name = "turma_id"))
 	private Set<Turma> turmas = new HashSet<>();
 
+	@ManyToOne
+    @JoinColumn(name = "ambiente_id")
 	private Ambiente ambiente;
 
 	@JsonIgnore
@@ -39,10 +41,16 @@ public class Reserva implements Serializable {
 
 	private int turno;
 
+	@ManyToOne
+    @JoinColumn(name = "horario_id")
 	private Horario horario;
 
+	@ManyToOne
+    @JoinColumn(name = "professor_id")
 	private Professor professor;
 
+	@ManyToOne
+    @JoinColumn(name = "disciplina_id")
 	private Disciplina disciplina;
 
 	private LocalDate data;

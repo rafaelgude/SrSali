@@ -13,6 +13,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -27,16 +29,20 @@ public class Ambiente implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
+	@NotNull(message = "Nome é obrigatório.")
 	private String nome;
 
+	@Positive(message = "Capacidade de Alunos é obrigatório.")
 	private int capacidadeAlunos;
 
 	@JsonIgnore
 	@ManyToOne
     @JoinColumn(name = "instituicao_id")
+	@NotNull(message = "Instituição é obrigatório.")
 	private InstituicaoDeEnsino instituicao;
 
 	@Enumerated
+	@NotNull(message = "Tipo de Ambiente é obrigatório.")
 	private TipoAmbiente tipoAmbiente = TipoAmbiente.SALA_AULA;
 
 	private boolean ativo;

@@ -38,7 +38,7 @@ public class DBService {
     @Autowired private CursoRepository cursoRepo;
     @Autowired BCryptPasswordEncoder pe;
 
-    public void iniciarBancoTeste() {
+    public void instantiateDatabase() {
         var uvv = instituicaoRepo.save(new InstituicaoDeEnsino("UVV", true));
         
         var rafael = new Usuario("Rafael", "rafael@gude.com", pe.encode("112233"), "1234-5678", uvv); 

@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 
 @Entity
 public class AmbienteFerramenta implements Serializable {
@@ -20,14 +21,15 @@ public class AmbienteFerramenta implements Serializable {
 	
 	@ManyToOne
     @JoinColumn(name = "ferramenta_id")
-	@NotNull
+	@NotNull(message = "Ferramenta é obrigatório.")
 	private Ferramenta ferramenta;
 
 	@ManyToOne
     @JoinColumn(name = "ambiente_id")
-	@NotNull
+	@NotNull(message = "Ambiente é obrigatório.")
 	private Ambiente ambiente;
 
+	@Positive(message = "Quantidade é obrigatório.")
 	private int quantidade;
 	
     public AmbienteFerramenta() {

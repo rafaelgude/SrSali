@@ -16,46 +16,47 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.srsali.srsali.models.Usuario;
-import br.com.srsali.srsali.services.UsuarioService;
+import br.com.srsali.srsali.models.Reserva;
+import br.com.srsali.srsali.services.ReservaService;
 
 @RestController
-@RequestMapping("/usuarios")
-public class UsuarioController {
+@RequestMapping("/reservas")
+public class ReservaController {
     
-    @Autowired UsuarioService usuarioService;
+    @Autowired ReservaService reservaService;
     
     @GetMapping
-    public ResponseEntity<Page<Usuario>> findAll(@RequestParam(value="page", defaultValue="0") int page, 
+    public ResponseEntity<Page<Reserva>> findAll(@RequestParam(value="page", defaultValue="0") int page, 
                                                  @RequestParam(value="linesPerPage", defaultValue="24") int linesPerPage, 
                                                  @RequestParam(value="orderBy", defaultValue="nome") String orderBy, 
                                                  @RequestParam(value="direction", defaultValue="ASC") String direction) {
-        return ResponseEntity.ok().body(usuarioService.findAll(page, linesPerPage, orderBy, direction));
+        return ResponseEntity.ok().body(reservaService.findAll(page, linesPerPage, orderBy, direction));
     }
     
     @GetMapping("/{id}")
-    public ResponseEntity<Usuario> find(@PathVariable int id) {
-        return ResponseEntity.ok().body(usuarioService.find(id));
+    public ResponseEntity<Reserva> find(@PathVariable int id) {
+        return ResponseEntity.ok().body(reservaService.find(id));
     }
-    
+
     @PostMapping
-    public ResponseEntity<Void> insert(@RequestBody List<Usuario> usuarios) {
-        usuarios.forEach(usuarioService::insert);
+    public ResponseEntity<Void> insert(@RequestBody List<Reserva> reservas) {
+        reservas.forEach(reservaService::insert);
         return ResponseEntity.created(null).build();
     }
     
     @PutMapping("/{id}")
-    public ResponseEntity<Void> update(@PathVariable int id, @RequestBody Usuario usuario) {
-        var newUsuario = usuarioService.find(id);
-        BeanUtils.copyProperties(usuario, newUsuario, "id", "instituicao");
-        usuarioService.update(newUsuario);
+    public ResponseEntity<Void> update(@PathVariable int id, @RequestBody Reserva reserva) {
+        var newReserva = reservaService.find(id);
+        BeanUtils.copyProperties(reserva, newReserva, "id", "instituicao");
+        reservaService.update(newReserva);
         
         return ResponseEntity.noContent().build();
     }
     
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable int id) {
-        usuarioService.delete(id);
+        reservaService.delete(id);
         return ResponseEntity.noContent().build();
     }
+    
 }

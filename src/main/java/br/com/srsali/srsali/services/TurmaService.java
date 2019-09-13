@@ -1,9 +1,10 @@
 package br.com.srsali.srsali.services;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import br.com.srsali.srsali.exceptions.DataIntegrityException;
@@ -16,8 +17,8 @@ public class TurmaService {
     
     @Autowired TurmaRepository turmaRepo;
     
-    public List<Turma> findAll() {
-        return turmaRepo.findAll();
+    public Page<Turma> findAll(int page, int linesPerPage, String orderBy, String direction) {
+        return turmaRepo.findAll(PageRequest.of(page, linesPerPage, Direction.valueOf(direction.toUpperCase()), orderBy));
     }
     
     public Turma find(int id) {

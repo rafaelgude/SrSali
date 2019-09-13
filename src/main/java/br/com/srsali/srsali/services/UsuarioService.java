@@ -1,9 +1,10 @@
 package br.com.srsali.srsali.services;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -22,8 +23,8 @@ public class UsuarioService {
     @Autowired UsuarioRepository usuarioRepo;
     @Autowired BCryptPasswordEncoder pe;
     
-    public List<Usuario> findAll() {
-        return usuarioRepo.findAll();
+    public Page<Usuario> findAll(int page, int linesPerPage, String orderBy, String direction) {
+        return usuarioRepo.findAll(PageRequest.of(page, linesPerPage, Direction.valueOf(direction.toUpperCase()), orderBy));
     }
     
     public Usuario find(int id) {

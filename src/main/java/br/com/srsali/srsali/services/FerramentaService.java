@@ -1,9 +1,10 @@
 package br.com.srsali.srsali.services;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import br.com.srsali.srsali.exceptions.DataIntegrityException;
@@ -17,8 +18,8 @@ public class FerramentaService {
     @Autowired FerramentaRepository ferramentaRepo;
     @Autowired UsuarioService usuarioService;
     
-    public List<Ferramenta> findAll() {
-        return ferramentaRepo.findAll();
+    public Page<Ferramenta> findAll(int page, int linesPerPage, String orderBy, String direction) {
+        return ferramentaRepo.findAll(PageRequest.of(page, linesPerPage, Direction.valueOf(direction.toUpperCase()), orderBy));
     }
     
     public Ferramenta find(int id) {

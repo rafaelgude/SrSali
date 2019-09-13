@@ -4,9 +4,11 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import br.com.srsali.srsali.enums.Funcao;
+import br.com.srsali.srsali.enums.Permissao;
 import br.com.srsali.srsali.enums.TipoAmbiente;
 import br.com.srsali.srsali.models.Ambiente;
 import br.com.srsali.srsali.models.AmbienteFerramenta;
@@ -27,32 +29,23 @@ import br.com.srsali.srsali.repositories.UsuarioRepository;
 @Service
 public class DBService {
     
-    @Autowired
-    private InstituicaoDeEnsinoRepository instituicaoRepo;
-    
-    @Autowired
-    private UsuarioRepository usuarioRepo;
-    
-    @Autowired
-    private ProfessorRepository professorRepo;
-    
-    @Autowired
-    private FerramentaRepository ferramentaRepo;
-    
-    @Autowired
-    private AmbienteRepository ambienteRepo;
-    
-    @Autowired
-    private DisciplinaRepository disciplinaRepo;
-    
-    @Autowired
-    private CursoRepository cursoRepo;
+    @Autowired private InstituicaoDeEnsinoRepository instituicaoRepo;
+    @Autowired private UsuarioRepository usuarioRepo;
+    @Autowired private ProfessorRepository professorRepo;
+    @Autowired private FerramentaRepository ferramentaRepo;
+    @Autowired private AmbienteRepository ambienteRepo;
+    @Autowired private DisciplinaRepository disciplinaRepo;
+    @Autowired private CursoRepository cursoRepo;
+    @Autowired BCryptPasswordEncoder pe;
 
     public void instantiateTestDatabase() {
         var uvv = instituicaoRepo.save(new InstituicaoDeEnsino("UVV", true));
-        var erlon = new Usuario("Erlon", "erlon@uvv.br", "123456", "99999-8888", uvv); 
+        
+        var rafael = new Usuario("Rafael", "rafael@gude.com", pe.encode("147258369"), "1234-5678", uvv); 
+        var erlon = new Usuario("Erlon", "erlon@uvv.br", pe.encode("123456"), "99999-8888", uvv); 
         erlon.getFuncoes().add(Funcao.ADMINISTRADOR);
-        usuarioRepo.save(erlon);
+        erlon.getPermissoes().addAll(Set.of(Permissao.values()));
+        usuarioRepo.saveAll(List.of(erlon, rafael));
         
         professorRepo.saveAll(List.of(new Professor("erlon@uvv.br", "Erlon", erlon, uvv, true), 
                                       new Professor("susilea@uvv.br", "Susiléa", null, uvv, true)));

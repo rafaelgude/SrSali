@@ -9,6 +9,7 @@ import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -31,13 +32,14 @@ public class Usuario implements Serializable {
 	
 	private String nome;
 	
+	@Column(unique = true)
 	private String email;
 	
 	private String senha;
 	
 	private String telefone;
 	
-	@ElementCollection(targetClass = Funcao.class)
+	@ElementCollection(fetch = FetchType.EAGER)
 	@CollectionTable(name = "usuario_funcao", joinColumns = @JoinColumn(name = "usuario_id"))
 	@Column(name = "funcao_id")
 	private Set<Funcao> funcoes = Sets.newHashSet(Funcao.USUARIO);
@@ -46,7 +48,7 @@ public class Usuario implements Serializable {
 	
 	private LocalDateTime dataHoraConvite;
 	
-	@ElementCollection(targetClass = Permissao.class)
+	@ElementCollection
     @CollectionTable(name = "usuario_permissao", joinColumns = @JoinColumn(name = "usuario_id"))
     @Column(name = "permissao_id")
     private Set<Permissao> permissoes = new HashSet<>();

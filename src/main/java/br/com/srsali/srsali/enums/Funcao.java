@@ -1,7 +1,28 @@
 package br.com.srsali.srsali.enums;
 
 public enum Funcao {
-	USUARIO,
-	OPERADOR,
-	ADMINISTRADOR;
+	USUARIO("ROLE_USUARIO"),
+	OPERADOR("ROLE_OPERADOR"),
+	ADMINISTRADOR("ROLE_ADMINISTRADOR");
+    
+    private String role;
+    
+    private Funcao(String role) {
+        this.role = role;
+    }
+
+    public String getRole() {
+        return role;
+    }
+    
+    public static Funcao toEnum(String role) {
+        if (role == null || role.isBlank())
+            return null;
+        
+        for (Funcao x : Funcao.values())
+            if (x.getRole().equals(role))
+                return x;
+        
+        throw new IllegalArgumentException("Role inválida: " + role);
+    }
 }

@@ -1,3 +1,8 @@
+DROP DATABASE IF EXISTS sr_sali;
+CREATE DATABASE sr_sali;
+
+USE sr_sali;
+
 CREATE TABLE `instituicao_de_ensino` (
   `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   `ativo` BIT(1) NOT NULL,

@@ -2,32 +2,20 @@ package br.com.srsali.srsali.models;
 
 import java.io.Serializable;
 
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.IdClass;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
-@Table(name = "ambiente_ferramenta")
-@IdClass(AmbienteFerramentaPK.class)
 public class AmbienteFerramenta implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
-	@Id
-	@ManyToOne
-    @JoinColumn(name = "ferramenta_id")
-	@NotNull(message = "Ferramenta é obrigatório.")
-	private Ferramenta ferramenta;
-
-	@Id
-	@ManyToOne
-    @JoinColumn(name = "ambiente_id")
-	@NotNull(message = "Ambiente é obrigatório.")
-	private Ambiente ambiente;
+	@JsonIgnore
+	@EmbeddedId
+	private AmbienteFerramentaId id = new AmbienteFerramentaId();
 
 	@Positive(message = "Quantidade é obrigatório.")
 	private int quantidade;
@@ -37,25 +25,25 @@ public class AmbienteFerramenta implements Serializable {
 
     public AmbienteFerramenta(@NotNull Ferramenta ferramenta, @NotNull Ambiente ambiente, int quantidade) {
         super();
-        this.ferramenta = ferramenta;
-        this.ambiente = ambiente;
+        this.id.setFerramenta(ferramenta);
+        this.id.setAmbiente(ambiente);
         this.quantidade = quantidade;
     }
 
     public Ferramenta getFerramenta() {
-        return ferramenta;
+        return id.getFerramenta();
     }
 
     public void setFerramenta(Ferramenta ferramenta) {
-        this.ferramenta = ferramenta;
+        this.id.setFerramenta(ferramenta);
     }
 
     public Ambiente getAmbiente() {
-        return ambiente;
+        return id.getAmbiente();
     }
 
     public void setAmbiente(Ambiente ambiente) {
-        this.ambiente = ambiente;
+        this.id.setAmbiente(ambiente);
     }
 
     public int getQuantidade() {

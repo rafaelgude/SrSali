@@ -12,8 +12,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 public class Disciplina implements Serializable {
@@ -23,11 +25,13 @@ public class Disciplina implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
+	@NotNull(message = "Nome é obrigatório.")
 	private String nome;
 
 	@JsonIgnore
 	@ManyToOne
     @JoinColumn(name = "instituicao_id")
+	@NotNull(message = "Instituição é obrigatório.")
 	private InstituicaoDeEnsino instituicao;
 
 	private boolean ativo;
@@ -40,6 +44,10 @@ public class Disciplina implements Serializable {
 	
 	public Disciplina() {
 	}
+	
+	public Disciplina(int id) {
+	    this.id = id;
+    }
 	
 	public Disciplina(String nome, InstituicaoDeEnsino instituicao, boolean ativo, Set<Ferramenta> ferramentas) {
         super();
@@ -87,6 +95,12 @@ public class Disciplina implements Serializable {
 
     public void setFerramentas(Set<Ferramenta> ferramentas) {
         this.ferramentas = ferramentas;
+    }
+    
+    @JsonProperty
+    public void setFerramentas(int[] ferramentas) {
+        for (var x : ferramentas)
+            this.ferramentas.add(new Ferramenta(x));
     }
 	
 }

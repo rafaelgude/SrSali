@@ -13,8 +13,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 public class Reserva implements Serializable {
@@ -32,17 +34,20 @@ public class Reserva implements Serializable {
 
 	@ManyToOne
     @JoinColumn(name = "ambiente_id")
+	@NotNull(message = "Ambiente é obrigatório.")
 	private Ambiente ambiente;
 
 	@JsonIgnore
 	@ManyToOne
     @JoinColumn(name = "instituicao_id")
+	@NotNull(message = "Instituição é obrigatório.")
 	private InstituicaoDeEnsino instituicao;
 
 	private int turno;
 
 	@ManyToOne
     @JoinColumn(name = "horario_id")
+	@NotNull(message = "Horário é obrigatório.")
 	private Horario horario;
 
 	@ManyToOne
@@ -53,6 +58,7 @@ public class Reserva implements Serializable {
     @JoinColumn(name = "disciplina_id")
 	private Disciplina disciplina;
 
+	@NotNull(message = "Data é obrigatório.")
 	private LocalDate data;
 
 	private boolean preReserva;
@@ -71,6 +77,12 @@ public class Reserva implements Serializable {
 
     public void setTurmas(Set<Turma> turmas) {
         this.turmas = turmas;
+    }
+    
+    @JsonProperty
+    public void setTurmas(int[] turmas) {
+        for (var x : turmas)
+            this.turmas.add(new Turma(x));
     }
 
     public Ambiente getAmbiente() {

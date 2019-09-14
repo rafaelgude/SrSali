@@ -28,8 +28,8 @@ public class ReservaController {
     @GetMapping
     public ResponseEntity<Page<Reserva>> findAll(@RequestParam(value="page", defaultValue="0") int page, 
                                                  @RequestParam(value="linesPerPage", defaultValue="24") int linesPerPage, 
-                                                 @RequestParam(value="orderBy", defaultValue="nome") String orderBy, 
-                                                 @RequestParam(value="direction", defaultValue="ASC") String direction) {
+                                                 @RequestParam(value="orderBy", defaultValue="data") String orderBy, 
+                                                 @RequestParam(value="direction", defaultValue="DESC") String direction) {
         return ResponseEntity.ok().body(reservaService.findAll(page, linesPerPage, orderBy, direction));
     }
     

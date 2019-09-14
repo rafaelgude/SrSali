@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -20,17 +21,21 @@ public class Horario implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
+	@NotNull(message = "Nome é obrigatório.")
 	private String nome;
 
 	private int turno;
 
+	@NotNull(message = "Horário de Início é obrigatório.")
 	private LocalTime horaInicio;
 
+	@NotNull(message = "Horário de Fim é obrigatório.")
 	private LocalTime horaFim;
 
 	@JsonIgnore
 	@ManyToOne
     @JoinColumn(name = "instituicao_id")
+	@NotNull(message = "Instituição é obrigatório.")
 	private InstituicaoDeEnsino instituicao;
 
 	public int getId() {

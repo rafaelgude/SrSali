@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -20,6 +21,7 @@ public class Professor implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
+	@NotNull(message = "Nome é obrigatório.")
 	private String nome;
 	
 	private String email;
@@ -30,6 +32,7 @@ public class Professor implements Serializable {
 	@JsonIgnore
 	@ManyToOne
     @JoinColumn(name = "instituicao_id")
+	@NotNull(message = "Instituição é obrigatório.")
 	private InstituicaoDeEnsino instituicao;
 	
 	private boolean ativo;

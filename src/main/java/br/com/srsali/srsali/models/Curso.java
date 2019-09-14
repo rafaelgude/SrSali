@@ -12,10 +12,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 public class Curso implements Serializable {
@@ -31,6 +33,7 @@ public class Curso implements Serializable {
 	@JsonIgnore
 	@ManyToOne
     @JoinColumn(name = "instituicao_id")
+	@NotNull(message = "Instituição é obrigatório.")
 	private InstituicaoDeEnsino instituicao;
 	
 	private boolean ativo = true;
@@ -40,8 +43,9 @@ public class Curso implements Serializable {
 	@JoinTable(name = "curso_disciplina", 
 			   joinColumns = @JoinColumn(name = "curso_id"), 
 			   inverseJoinColumns = @JoinColumn(name = "disciplina_id"))
+	@NotEmpty(message = "É obrigatório no mínimo uma disciplina.")
 	private Set<Disciplina> disciplinas = new HashSet<>();
-
+	
 	public Curso() {
 	}
 
@@ -88,9 +92,15 @@ public class Curso implements Serializable {
     public Set<Disciplina> getDisciplinas() {
         return disciplinas;
     }
-
+    
     public void setDisciplinas(Set<Disciplina> disciplinas) {
         this.disciplinas = disciplinas;
     }
-	
+    
+    @JsonProperty
+    public void setDisciplinas(int[] disciplinas) {
+        for (var x : disciplinas)
+            this.disciplinas.add(new Disciplina(x));
+    }
+    
 }

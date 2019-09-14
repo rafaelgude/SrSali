@@ -8,6 +8,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotNull;
 
 @Entity
 public class Turma implements Serializable {
@@ -17,6 +18,7 @@ public class Turma implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
+	@NotNull(message = "Nome é obrigatório.")
 	private String nome;
 
 	@ManyToOne
@@ -26,8 +28,24 @@ public class Turma implements Serializable {
 	private int quantidadeAlunos;
 
 	private boolean ativo;
+	
+	public Turma() {
+    }
+	
+	public Turma(int id) {
+        super();
+        this.id = id;
+    }
 
-	public int getId() {
+    public Turma(String nome, Curso curso, int quantidadeAlunos, boolean ativo) {
+        super();
+        this.nome = nome;
+        this.curso = curso;
+        this.quantidadeAlunos = quantidadeAlunos;
+        this.ativo = ativo;
+    }
+
+    public int getId() {
 		return id;
 	}
 

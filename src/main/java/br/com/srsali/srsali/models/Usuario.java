@@ -15,6 +15,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -31,12 +33,15 @@ public class Usuario implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
+	@NotNull(message = "Nome é obrigatório.")
 	private String nome;
 	
 	@Column(unique = true)
+	@NotNull(message = "E-mail é obrigatório.")
 	private String email;
 	
 	@JsonIgnore
+	@NotNull(message = "Senha é obrigatório.")
 	private String senha;
 	
 	private String telefone;
@@ -44,6 +49,7 @@ public class Usuario implements Serializable {
 	@ElementCollection(fetch = FetchType.EAGER)
 	@CollectionTable(name = "usuario_funcao", joinColumns = @JoinColumn(name = "usuario_id"))
 	@Column(name = "funcao_id")
+	@NotEmpty(message = "É obrigatório no mínimo uma função.")
 	private Set<Funcao> funcoes = Sets.newHashSet(Funcao.USUARIO);
 	
 	private String convite;
@@ -58,7 +64,10 @@ public class Usuario implements Serializable {
 	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "instituicao_id")
+	@NotNull(message = "Instituição é obrigatório.")
 	private InstituicaoDeEnsino instituicao;
+	
+	private boolean ativo;
 
 	public Usuario() {
 	}
@@ -70,7 +79,7 @@ public class Usuario implements Serializable {
         this.senha = senha;
         this.telefone = telefone;
         this.instituicao = instituicao;
-        
+        this.ativo = true;
     }
 
     public int getId() {
@@ -155,4 +164,12 @@ public class Usuario implements Serializable {
         this.instituicao = instituicao;
     }
 
+    public boolean isAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(boolean ativo) {
+        this.ativo = ativo;
+    }
+    
 }

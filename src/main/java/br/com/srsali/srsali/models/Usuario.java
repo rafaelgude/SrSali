@@ -2,10 +2,8 @@ package br.com.srsali.srsali.models;
 
 import java.io.Serializable;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -73,7 +71,7 @@ public class Usuario implements Serializable {
 	
 	@JsonIgnore
 	@OneToMany(mappedBy = "usuario_id", orphanRemoval = true)
-	private Set<?> convites = new HashSet<>();
+	private Set<UsuarioSolicitacao> solicitacoes = new HashSet<>();
 
 	public Usuario() {
 	}
@@ -160,6 +158,14 @@ public class Usuario implements Serializable {
 
     public void setAtivo(boolean ativo) {
         this.ativo = ativo;
+    }
+
+    public Set<UsuarioSolicitacao> getSolicitacoes() {
+        return solicitacoes;
+    }
+
+    public void setSolicitacoes(Set<UsuarioSolicitacao> solicitacoes) {
+        this.solicitacoes = solicitacoes;
     }
     
 }

@@ -11,11 +11,14 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 import br.com.srsali.srsali.enums.TipoSolicitacao;
 
 @Entity
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"usuario_id", "tipo_solicitacao"}))
 public class UsuarioSolicitacao implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
@@ -34,6 +37,7 @@ public class UsuarioSolicitacao implements Serializable {
 	
 	@Enumerated
     @NotNull(message = "Tipo de Solicitação é obrigatório.")
+	@Column(name = "tipo_solicitacao")
     private TipoSolicitacao tipoSolicitacao;
 	
 	@NotNull(message = "Data e Hora de envio são obrigatórios.")

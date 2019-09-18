@@ -70,7 +70,7 @@ public class Usuario implements Serializable {
 	private boolean ativo;
 	
 	@JsonIgnore
-	@OneToMany(mappedBy = "usuario_id", orphanRemoval = true)
+	@OneToMany(mappedBy = "usuario", orphanRemoval = true)
 	private Set<UsuarioSolicitacao> solicitacoes = new HashSet<>();
 
 	public Usuario() {

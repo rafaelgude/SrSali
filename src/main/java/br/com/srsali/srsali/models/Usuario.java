@@ -1,10 +1,11 @@
 package br.com.srsali.srsali.models;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -15,8 +16,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -37,11 +41,13 @@ public class Usuario implements Serializable {
 	private String nome;
 	
 	@Column(unique = true)
+	@Email(message = "E-mail inválido.")
 	@NotNull(message = "E-mail é obrigatório.")
 	private String email;
 	
 	@JsonIgnore
 	@NotNull(message = "Senha é obrigatório.")
+	@Size(min = 6, message = "A senha deve conter no mínimo 6 caracteres.")
 	private String senha;
 	
 	private String telefone;
@@ -51,10 +57,6 @@ public class Usuario implements Serializable {
 	@Column(name = "funcao_id")
 	@NotEmpty(message = "É obrigatório no mínimo uma função.")
 	private Set<Funcao> funcoes = Sets.newHashSet(Funcao.USUARIO);
-	
-	private String convite;
-	
-	private LocalDateTime dataHoraConvite;
 	
 	@ElementCollection
     @CollectionTable(name = "usuario_permissao", joinColumns = @JoinColumn(name = "usuario_id"))
@@ -68,6 +70,10 @@ public class Usuario implements Serializable {
 	private InstituicaoDeEnsino instituicao;
 	
 	private boolean ativo;
+	
+	@JsonIgnore
+	@OneToMany(mappedBy = "usuario_id", orphanRemoval = true)
+	private Set<?> convites = new HashSet<>();
 
 	public Usuario() {
 	}
@@ -130,22 +136,6 @@ public class Usuario implements Serializable {
 
     public void setFuncoes(Set<Funcao> funcoes) {
         this.funcoes = funcoes;
-    }
-
-    public String getConvite() {
-        return convite;
-    }
-
-    public void setConvite(String convite) {
-        this.convite = convite;
-    }
-
-    public LocalDateTime getDataHoraConvite() {
-        return dataHoraConvite;
-    }
-
-    public void setDataHoraConvite(LocalDateTime dataHoraConvite) {
-        this.dataHoraConvite = dataHoraConvite;
     }
 
     public Set<Permissao> getPermissoes() {

@@ -4,7 +4,6 @@ import java.io.Serializable;
 
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -23,7 +22,7 @@ public class AmbienteFerramenta implements Serializable {
     public AmbienteFerramenta() {
     }
 
-    public AmbienteFerramenta(@NotNull Ferramenta ferramenta, @NotNull Ambiente ambiente, int quantidade) {
+    public AmbienteFerramenta(Ferramenta ferramenta, Ambiente ambiente, int quantidade) {
         super();
         this.id.setFerramenta(ferramenta);
         this.id.setAmbiente(ambiente);

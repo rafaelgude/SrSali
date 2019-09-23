@@ -47,7 +47,7 @@ public class Ambiente implements Serializable {
 
 	private boolean ativo;
 	
-	@JsonIgnoreProperties(value = "id.ambiente")
+	@JsonIgnoreProperties(value = "ambiente")
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "id.ambiente", orphanRemoval = true)
 	private Set<AmbienteFerramenta> ferramentas = new HashSet<>();
 	

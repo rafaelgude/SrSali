@@ -43,7 +43,7 @@ export default class Login extends Component {
       });
 
       if (response) {
-        login(response.headers.authorization);
+        login(response.headers.authorization.replace("Bearer ", ""));
         this.props.history.push("/app");
       }
     }

@@ -34,8 +34,11 @@ public class UsuarioService {
         
         return usuarioRepo.findById(id).orElseThrow(() -> new ObjectNotFoundException(Usuario.class.getName() + " não encontrado(a)."));
     }
-
+    
     public void insert(Usuario usuario) {
+        if (usuarioRepo.findByEmail(usuario.getEmail()) != null)
+            throw new DataIntegrityException("E-mail já existente.");
+        
         usuario.setSenha(pe.encode(usuario.getSenha()));
         if (getAuthenticated() != null)
             usuario.setInstituicao(getAuthenticated().getInstituicao());
@@ -44,6 +47,9 @@ public class UsuarioService {
     }
     
     public void update(Usuario usuario) {
+        if (usuarioRepo.findByEmailAndIdNotIn(usuario.getEmail(), usuario.getId()) != null)
+            throw new DataIntegrityException("E-mail já existente.");
+        
         usuarioRepo.save(usuario);
     }
     

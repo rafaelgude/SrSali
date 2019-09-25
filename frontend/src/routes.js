@@ -2,6 +2,8 @@ import React from "react";
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 import Cadastro from "./pages/cadastro";
 import Login from "./pages/login";
+import Home from "./pages/home";
+import App from "./pages/app";
 
 import { isAuthenticated } from "./services/auth";
 
@@ -34,10 +36,10 @@ const NoAuthRoute = ({ component: Component, ...rest }) => (
 const Routes = () => (
   <BrowserRouter>
     <Switch>
-      <Route exact path="/" component={() => <h1>HomePage</h1>} />
+      <Route exact path="/" component={Home} />
       <NoAuthRoute path="/cadastro" component={Cadastro} />
       <NoAuthRoute path="/login" component={Login} />
-      <PrivateRoute path="/app" component={() => <h1>App</h1>} />
+      <PrivateRoute path="/app" component={App} />
       <Route path="*" component={() => <h1>Página não encontrada</h1>} />
     </Switch>
   </BrowserRouter>

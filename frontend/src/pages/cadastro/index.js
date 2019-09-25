@@ -7,6 +7,7 @@ import {
   Alert
 } from "tabler-react";
 import api from "../../services/api";
+import { login } from "../../services/auth";
 
 export default class Cadastro extends Component {
   constructor(props) {
@@ -30,29 +31,30 @@ export default class Cadastro extends Component {
 
   handleSubmit = async e => {
     e.preventDefault();
-    const { errors, ...dados } = this.state;
+    const { errors, ...data } = this.state;
 
-    if (dados.instituicao.nome) {
+    errors.others = "";
+    if (data.instituicao.nome) {
       errors.instituicao =
-        dados.instituicao.nome.length > 60
+        data.instituicao.nome.length > 60
           ? "Máximo de 60 caracteres permitido."
           : "";
     } else {
       errors.instituicao = "O nome da Instituição é obrigatório.";
     }
 
-    if (dados.nome) {
+    if (data.nome) {
       errors.nome =
-        dados.nome.length > 60 ? "Máximo de 60 caracteres permitido." : "";
+        data.nome.length > 60 ? "Máximo de 60 caracteres permitido." : "";
     } else {
       errors.nome = "O nome da Usuário é obrigatório.";
     }
 
-    if (dados.email) {
-      if (dados.email.length > 60) {
+    if (data.email) {
+      if (data.email.length > 60) {
         errors.email = "Máximo de 60 caracteres permitido.";
       } else {
-        errors.email = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(dados.email)
+        errors.email = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)
           ? ""
           : "O e-mail é inválido.";
       }
@@ -60,16 +62,30 @@ export default class Cadastro extends Component {
       errors.email = "O e-mail é obrigatório.";
     }
 
-    errors.senha = dados.senha ? "" : "A senha é obrigatória.";
+    errors.senha =
+      data.senha.length > 5
+        ? ""
+        : "A senha deve conter no mínimo 6 caracteres.";
 
     this.setState({ errors });
 
     if (!errors.instituicao && !errors.nome && !errors.email && !errors.senha) {
       try {
-        await api.post("/instituicoes", dados);
-        this.props.history.push("/");
+        const response = await api.post("/instituicoes", data).catch(error => {
+          const { message = "Falha no cadastro." } =
+            (error.response && error.response.data.error) || {};
+          this.setState({ errors: { others: message } });
+        });
+
+        if (response) {
+          const loginResponse = await api.post("/login", data);
+          if (loginResponse) {
+            login(loginResponse.headers.authorization.replace("Bearer ", ""));
+            this.props.history.push("/app");
+          }
+        }
       } catch (err) {
-        this.setState({ errors: { others: "Falha no cadastro!" } });
+        this.setState({ errors: { others: "Falha no cadastro." } });
       }
     }
   };

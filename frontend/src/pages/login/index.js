@@ -36,9 +36,8 @@ export default class Login extends Component {
 
     if (!errors.email && !errors.senha) {
       const response = await api.post("/login", data).catch(error => {
-        const {
-          message = "Falha na autenticação."
-        } = error.response.data.error;
+        const { message = "Falha na autenticação." } =
+          (error.response && error.response.data.error) || {};
         this.setState({ errors: { others: message } });
       });
 

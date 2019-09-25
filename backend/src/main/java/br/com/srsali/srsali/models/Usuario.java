@@ -36,13 +36,13 @@ public class Usuario implements Serializable {
 	private int id;
 	
 	@NotNull(message = "Nome é obrigatório.")
-	@Size(max = 60)
+	@Size(max = 60, message = "Nome: Máximo de 60 caracteres permitido.")
 	private String nome;
 	
 	@Column(unique = true)
 	@Email(message = "E-mail inválido.")
 	@NotNull(message = "E-mail é obrigatório.")
-	@Size(max = 60)
+	@Size(max = 60, message = "E-mail: Máximo de 60 caracteres permitido.")
 	private String email;
 	
 	@JsonIgnore
@@ -50,7 +50,7 @@ public class Usuario implements Serializable {
 	@Size(min = 6, message = "A senha deve conter no mínimo 6 caracteres.")
 	private String senha;
 	
-	@Size(max = 60)
+	@Size(max = 60, message = "Telefone: Máximo de 60 caracteres permitido.")
 	private String telefone;
 	
 	@ElementCollection(fetch = FetchType.EAGER)
@@ -169,7 +169,9 @@ public class Usuario implements Serializable {
     }
 
     public void setSolicitacoes(Set<UsuarioSolicitacao> solicitacoes) {
-        this.solicitacoes = solicitacoes;
+        this.solicitacoes.clear();
+        this.solicitacoes.addAll(solicitacoes);
+        this.solicitacoes.forEach(x -> x.setUsuario(this));
     }
     
 }

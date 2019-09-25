@@ -47,7 +47,7 @@ public class UsuarioController {
     @PutMapping("/{id}")
     public ResponseEntity<Void> update(@PathVariable int id, @RequestBody Usuario usuario) {
         var newUsuario = usuarioService.find(id);
-        BeanUtils.copyProperties(usuario, newUsuario, "id", "instituicao");
+        BeanUtils.copyProperties(usuario, newUsuario, "id", "instituicao", "senha");
         usuarioService.update(newUsuario);
         
         return ResponseEntity.noContent().build();

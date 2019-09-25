@@ -77,8 +77,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         if (List.of(env.getActiveProfiles()).contains("test")) 
             http.headers().frameOptions().disable();
         
-        http.cors().and().csrf().disable();
-        http.authorizeRequests()
+        http.cors().and()
+            .csrf().disable()
+            .authorizeRequests()
             .antMatchers(HttpMethod.GET, PUBLIC_MATCHERS_GET).permitAll()
             .antMatchers(HttpMethod.POST, PUBLIC_MATCHERS_POST).permitAll()
             .antMatchers(HttpMethod.GET, PRIVATE_MATCHERS_GET).hasAnyRole("ADMIN", "OPERADOR", "USUARIO")
@@ -88,11 +89,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers(HttpMethod.PUT, "/instituicoes/**").hasRole("ADMIN")
             .antMatchers(HttpMethod.DELETE, "/instituicoes/**").hasRole("ADMIN")
             .antMatchers(PUBLIC_MATCHERS).permitAll()
-            .anyRequest().authenticated();
-        
-        http.addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtUtil));
-        http.addFilter(new JWTAuthorizationFilter(authenticationManager(), jwtUtil, userDetailsService));
-        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+            .anyRequest().authenticated().and()
+            .addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtUtil))
+            .addFilter(new JWTAuthorizationFilter(authenticationManager(), jwtUtil, userDetailsService))
+            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
     
     @Override
@@ -103,7 +103,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         final var source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
+        var config = new CorsConfiguration().applyPermitDefaultValues();
+        config.setExposedHeaders(List.of("Authorization"));
+        
+        source.registerCorsConfiguration("/**", config);
         return source;
     }
     

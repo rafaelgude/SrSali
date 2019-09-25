@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 public class InstituicaoDeEnsino implements Serializable {
@@ -17,6 +18,7 @@ public class InstituicaoDeEnsino implements Serializable {
 	private int id;
 	
 	@NotNull(message = "Nome é obrigatório.")
+	@Size(max = 60)
 	private String nome;
 	
 	private boolean ativo;

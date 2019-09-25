@@ -36,8 +36,10 @@ public class UsuarioService {
     }
 
     public void insert(Usuario usuario) {
-        usuario.setInstituicao(getAuthenticated().getInstituicao());
         usuario.setSenha(pe.encode(usuario.getSenha()));
+        if (getAuthenticated() != null)
+            usuario.setInstituicao(getAuthenticated().getInstituicao());
+        
         usuarioRepo.save(usuario);
     }
     

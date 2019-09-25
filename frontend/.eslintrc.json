@@ -4,17 +4,17 @@
     "browser": true,
     "jest": true
   },
-  "plugins": ["react", "jsx-a11y", "import"],
-  "extends": "airbnb",
+  "extends": ["airbnb", "prettier", "prettier/react"],
+  "plugins": ["react", "jsx-a11y", "import", "prettier"],
   "rules": {
+    "prettier/prettier": "error",
     "react/jsx-filename-extension": [
       "error",
-      {
-        "extensions": [".js", ".jsx"]
-      }
+      { "extensions": [".js", ".jsx"] }
     ],
-    "global-require": "off",
     "import/prefer-default-export": "off",
-    "no-unused-expressions": ["error", { "allowTaggedTemplates": true }]
+    "no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+    "react/jsx-one-expression-per-line": "off",
+    "global-require": "off"
   }
 }

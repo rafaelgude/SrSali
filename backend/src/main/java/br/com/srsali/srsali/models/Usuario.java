@@ -36,11 +36,13 @@ public class Usuario implements Serializable {
 	private int id;
 	
 	@NotNull(message = "Nome é obrigatório.")
+	@Size(max = 60)
 	private String nome;
 	
 	@Column(unique = true)
 	@Email(message = "E-mail inválido.")
 	@NotNull(message = "E-mail é obrigatório.")
+	@Size(max = 60)
 	private String email;
 	
 	@JsonIgnore
@@ -48,6 +50,7 @@ public class Usuario implements Serializable {
 	@Size(min = 6, message = "A senha deve conter no mínimo 6 caracteres.")
 	private String senha;
 	
+	@Size(max = 60)
 	private String telefone;
 	
 	@ElementCollection(fetch = FetchType.EAGER)
@@ -61,7 +64,6 @@ public class Usuario implements Serializable {
     @Column(name = "permissao_id")
     private Set<Permissao> permissoes = new HashSet<>();
 	
-	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "instituicao_id")
 	@NotNull(message = "Instituição é obrigatório.")
@@ -144,10 +146,12 @@ public class Usuario implements Serializable {
         this.permissoes = permissoes;
     }
 
+    @JsonIgnore
     public InstituicaoDeEnsino getInstituicao() {
         return instituicao;
     }
 
+    @JsonProperty
     public void setInstituicao(InstituicaoDeEnsino instituicao) {
         this.instituicao = instituicao;
     }

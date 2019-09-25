@@ -1,5 +1,7 @@
 package br.com.srsali.srsali.exceptions;
 
+import org.springframework.http.HttpStatus;
+
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.annotation.JsonTypeIdResolver;
 import com.fasterxml.jackson.databind.jsontype.impl.TypeIdResolverBase;
@@ -13,6 +15,12 @@ public class Error {
     public Error(Integer status, String message) {
         super();
         this.status = status;
+        this.message = message;
+    }
+    
+    public Error(HttpStatus status, String message) {
+        super();
+        this.status = status.value();
         this.message = message;
     }
 

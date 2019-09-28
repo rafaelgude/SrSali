@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.time.LocalTime;
 
 import javax.persistence.Entity;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -12,6 +13,8 @@ import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import br.com.srsali.srsali.enums.Turno;
 
 @Entity
 public class Horario implements Serializable {
@@ -24,7 +27,8 @@ public class Horario implements Serializable {
 	@NotNull(message = "Nome é obrigatório.")
 	private String nome;
 
-	private int turno;
+	@Enumerated
+	private Turno turno;
 
 	@NotNull(message = "Horário de Início é obrigatório.")
 	private LocalTime horaInicio;
@@ -37,8 +41,20 @@ public class Horario implements Serializable {
     @JoinColumn(name = "instituicao_id")
 	@NotNull(message = "Instituição é obrigatório.")
 	private InstituicaoDeEnsino instituicao;
+	
+	public Horario() {
+	}
 
-	public int getId() {
+    public Horario(String nome, Turno turno, LocalTime horaInicio, LocalTime horaFim, InstituicaoDeEnsino instituicao) {
+        super();
+        this.nome = nome;
+        this.turno = turno;
+        this.horaInicio = horaInicio;
+        this.horaFim = horaFim;
+        this.instituicao = instituicao;
+    }
+
+    public int getId() {
 		return id;
 	}
 
@@ -54,11 +70,11 @@ public class Horario implements Serializable {
 		this.nome = nome;
 	}
 
-	public int getTurno() {
+	public Turno getTurno() {
 		return turno;
 	}
 
-	public void setTurno(int turno) {
+	public void setTurno(Turno turno) {
 		this.turno = turno;
 	}
 

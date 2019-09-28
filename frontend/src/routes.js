@@ -1,18 +1,22 @@
 import React from "react";
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
+import { logout, isAuthenticated } from "./services/auth";
 import Cadastro from "./pages/cadastro";
 import Login from "./pages/login";
 import Home from "./pages/home";
-import App from "./pages/app";
-
-import { isAuthenticated } from "./services/auth";
+import Header from "./pages/header";
+import Reservas from "./pages/reservas";
+import Ferramentas from "./pages/ferramentas";
 
 const PrivateRoute = ({ component: Component, ...rest }) => (
   <Route
     {...rest}
     render={props =>
       isAuthenticated() ? (
-        <Component {...props} />
+        <>
+          <Header />
+          <Component {...props} />
+        </>
       ) : (
         <Redirect to={{ pathname: "/", state: { from: props.location } }} />
       )
@@ -34,15 +38,32 @@ const NoAuthRoute = ({ component: Component, ...rest }) => (
 );
 
 const Routes = () => (
-  <BrowserRouter>
-    <Switch>
-      <Route exact path="/" component={Home} />
-      <NoAuthRoute path="/cadastro" component={Cadastro} />
-      <NoAuthRoute path="/login" component={Login} />
-      <PrivateRoute path="/app" component={App} />
-      <Route path="*" component={() => <h1>Página não encontrada</h1>} />
-    </Switch>
-  </BrowserRouter>
+  <>
+    <BrowserRouter>
+      <Switch>
+        <Route exact path="/" component={Home} />
+        <NoAuthRoute path="/cadastro" component={Cadastro} />
+        <NoAuthRoute path="/login" component={Login} />
+        <PrivateRoute path="/app/reservas" component={Reservas} />
+        <PrivateRoute path="/app/ferramentas" component={Ferramentas} />
+        <PrivateRoute
+          exact
+          path="/app"
+          component={() => {
+            return <Redirect to={{ pathname: "/app/reservas" }} />;
+          }}
+        />
+        <Route
+          path="/logout"
+          component={() => {
+            logout();
+            return <Redirect to={{ pathname: "/" }} />;
+          }}
+        />
+        <Route path="*" component={() => <h1>Página não encontrada</h1>} />
+      </Switch>
+    </BrowserRouter>
+  </>
 );
 
 export default Routes;

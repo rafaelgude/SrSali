@@ -43,8 +43,6 @@ public class Reserva implements Serializable {
 	@NotNull(message = "Instituição é obrigatório.")
 	private InstituicaoDeEnsino instituicao;
 
-	private int turno;
-
 	@ManyToOne
     @JoinColumn(name = "horario_id")
 	@NotNull(message = "Horário é obrigatório.")
@@ -62,6 +60,22 @@ public class Reserva implements Serializable {
 	private LocalDate data;
 
 	private boolean preReserva;
+
+    public Reserva() {
+    }
+
+    public Reserva(Set<Turma> turmas, Ambiente ambiente, InstituicaoDeEnsino instituicao, Horario horario, Professor professor, 
+                   Disciplina disciplina, LocalDate data, boolean preReserva) {
+        super();
+        this.turmas = turmas;
+        this.ambiente = ambiente;
+        this.instituicao = instituicao;
+        this.horario = horario;
+        this.professor = professor;
+        this.disciplina = disciplina;
+        this.data = data;
+        this.preReserva = preReserva;
+    }
 
     public int getId() {
         return id;
@@ -99,14 +113,6 @@ public class Reserva implements Serializable {
 
     public void setInstituicao(InstituicaoDeEnsino instituicao) {
         this.instituicao = instituicao;
-    }
-
-    public int getTurno() {
-        return turno;
-    }
-
-    public void setTurno(int turno) {
-        this.turno = turno;
     }
 
     public Horario getHorario() {

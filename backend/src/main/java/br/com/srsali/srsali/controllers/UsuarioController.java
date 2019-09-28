@@ -58,4 +58,9 @@ public class UsuarioController {
         usuarioService.delete(id);
         return ResponseEntity.noContent().build();
     }
+    
+    @GetMapping("/authenticated")
+    public ResponseEntity<Usuario> getAuthenticated() {
+        return ResponseEntity.ok().body(usuarioService.getAuthenticated());
+    }
 }

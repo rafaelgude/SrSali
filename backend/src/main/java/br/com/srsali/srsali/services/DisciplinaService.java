@@ -19,7 +19,7 @@ public class DisciplinaService {
     @Autowired UsuarioService usuarioService;
     
     public Page<Disciplina> findAll(int page, int linesPerPage, String orderBy, String direction) {
-        return disciplinaRepo.findAll(PageRequest.of(page, linesPerPage, Direction.valueOf(direction.toUpperCase()), orderBy));
+        return disciplinaRepo.findAllByInstituicao(PageRequest.of(page, linesPerPage, Direction.valueOf(direction.toUpperCase()), orderBy), usuarioService.getAuthenticated().getInstituicao());
     }
     
     public Disciplina find(int id) {

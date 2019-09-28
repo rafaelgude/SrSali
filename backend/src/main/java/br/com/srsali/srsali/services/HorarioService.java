@@ -19,7 +19,7 @@ public class HorarioService {
     @Autowired UsuarioService usuarioService;
     
     public Page<Horario> findAll(int page, int linesPerPage, String orderBy, String direction) {
-        return horarioRepo.findAll(PageRequest.of(page, linesPerPage, Direction.valueOf(direction.toUpperCase()), orderBy));
+        return horarioRepo.findAllByInstituicao(PageRequest.of(page, linesPerPage, Direction.valueOf(direction.toUpperCase()), orderBy.split(",")), usuarioService.getAuthenticated().getInstituicao());
     }
     
     public Horario find(int id) {

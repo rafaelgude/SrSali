@@ -19,7 +19,7 @@ public class FerramentaService {
     @Autowired UsuarioService usuarioService;
     
     public Page<Ferramenta> findAll(int page, int linesPerPage, String orderBy, String direction) {
-        return ferramentaRepo.findAll(PageRequest.of(page, linesPerPage, Direction.valueOf(direction.toUpperCase()), orderBy));
+        return ferramentaRepo.findAllByInstituicao(PageRequest.of(page, linesPerPage, Direction.valueOf(direction.toUpperCase()), orderBy), usuarioService.getAuthenticated().getInstituicao());
     }
     
     public Ferramenta find(int id) {

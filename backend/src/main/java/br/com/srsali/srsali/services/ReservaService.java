@@ -18,7 +18,7 @@ public class ReservaService {
     @Autowired UsuarioService usuarioService;
     
     public Page<Reserva> findAll(int page, int linesPerPage, String orderBy, String direction) {
-        return reservaRepo.findAll(PageRequest.of(page, linesPerPage, Direction.valueOf(direction.toUpperCase()), orderBy));
+        return reservaRepo.findAllByInstituicao(PageRequest.of(page, linesPerPage, Direction.valueOf(direction.toUpperCase()), orderBy), usuarioService.getAuthenticated().getInstituicao());
     }
     
     public Reserva find(int id) {

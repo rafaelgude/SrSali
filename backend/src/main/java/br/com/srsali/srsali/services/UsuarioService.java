@@ -24,7 +24,7 @@ public class UsuarioService {
     @Autowired BCryptPasswordEncoder pe;
     
     public Page<Usuario> findAll(int page, int linesPerPage, String orderBy, String direction) {
-        return usuarioRepo.findAll(PageRequest.of(page, linesPerPage, Direction.valueOf(direction.toUpperCase()), orderBy));
+        return usuarioRepo.findAllByInstituicao(PageRequest.of(page, linesPerPage, Direction.valueOf(direction.toUpperCase()), orderBy), getAuthenticated().getInstituicao());
     }
     
     public Usuario find(int id) {

@@ -28,7 +28,7 @@ public class HorarioController {
     @GetMapping
     public ResponseEntity<Page<Horario>> findAll(@RequestParam(value="page", defaultValue="0") int page, 
                                                  @RequestParam(value="linesPerPage", defaultValue="24") int linesPerPage, 
-                                                 @RequestParam(value="orderBy", defaultValue="nome") String orderBy, 
+                                                 @RequestParam(value="orderBy", defaultValue="turno,nome") String orderBy, 
                                                  @RequestParam(value="direction", defaultValue="ASC") String direction) {
         return ResponseEntity.ok().body(horarioService.findAll(page, linesPerPage, orderBy, direction));
     }

@@ -19,7 +19,7 @@ public class CursoService {
     @Autowired UsuarioService usuarioService;
     
     public Page<Curso> findAll(int page, int linesPerPage, String orderBy, String direction) {
-        return cursoRepo.findAll(PageRequest.of(page, linesPerPage, Direction.valueOf(direction.toUpperCase()), orderBy));
+        return cursoRepo.findAllByInstituicao(PageRequest.of(page, linesPerPage, Direction.valueOf(direction.toUpperCase()), orderBy), usuarioService.getAuthenticated().getInstituicao());
     }
     
     public Curso find(int id) {

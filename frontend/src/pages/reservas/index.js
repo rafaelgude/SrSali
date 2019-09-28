@@ -1,12 +1,13 @@
 import React, { Component } from "react";
 import moment from "moment";
-import { Form, Grid } from "tabler-react";
+import { Form, Grid, Container } from "tabler-react";
 import Select from "react-select";
 import Calendar from "@toast-ui/react-calendar";
 import api from "../../services/api";
 import "tui-calendar/dist/tui-calendar.css";
 import "tui-date-picker/dist/tui-date-picker.css";
 import "tui-time-picker/dist/tui-time-picker.css";
+import "./styles.css";
 
 const dateFormat = "DD/MM/YYYY HH:mm";
 
@@ -14,6 +15,11 @@ export default class Reservas extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      ambienteOptions: [],
+      turmaOptions: [],
+      disciplinaOptions: [],
+      professorOptions: [],
+      horarioOptions: [],
       calendarProps: {
         view: "month",
         schedules: [
@@ -170,6 +176,8 @@ export default class Reservas extends Component {
         ]
       }
     };
+
+    this.loadSelects();
   }
 
   handleVisualizacaoChange = selectedOption => {
@@ -178,57 +186,163 @@ export default class Reservas extends Component {
     this.setState({ calendarProps });
   };
 
+  selectTheme = theme => {
+    return {
+      ...theme,
+      colors: {
+        ...theme.colors,
+        primary25: "#c7d8f0",
+        primary: "#467fcf"
+      }
+    };
+  };
+
+  async loadSelects() {
+    const resAmbientes = await api.get("/ambientes?linesPerPage=100");
+    if (resAmbientes) {
+      this.setState({
+        ambienteOptions: resAmbientes.data.content.map(ambiente => {
+          return { value: ambiente.id, label: ambiente.nome };
+        })
+      });
+    }
+
+    const resTurmas = await api.get("/turmas?linesPerPage=100");
+    if (resTurmas) {
+      this.setState({
+        turmaOptions: resTurmas.data.content.map(turma => {
+          return { value: turma.id, label: turma.nome };
+        })
+      });
+    }
+
+    const resDisciplinas = await api.get("/disciplinas?linesPerPage=100");
+    if (resDisciplinas) {
+      this.setState({
+        disciplinaOptions: resDisciplinas.data.content.map(disciplina => {
+          return { value: disciplina.id, label: disciplina.nome };
+        })
+      });
+    }
+
+    const resProfessores = await api.get("/professores?linesPerPage=100");
+    if (resProfessores) {
+      this.setState({
+        professorOptions: resProfessores.data.content.map(professor => {
+          return { value: professor.id, label: professor.nome };
+        })
+      });
+    }
+
+    const resHorarios = await api.get("/horarios?linesPerPage=100");
+    if (resHorarios) {
+      this.setState({
+        horarioOptions: resHorarios.data.content.map(horario => {
+          return {
+            value: horario.id,
+            label: `${horario.nome} (${horario.turno.charAt(
+              0
+            )}${horario.turno.slice(1).toLowerCase()})`
+          };
+        })
+      });
+    }
+  }
+
   render() {
+    const {
+      ambienteOptions,
+      turmaOptions,
+      disciplinaOptions,
+      professorOptions,
+      horarioOptions
+    } = this.state;
+
     return (
       <>
-        <Grid.Row>
+        <Grid.Row className="grid-row-filters">
           <Grid.Col>
             <Form.Group label="Visualização">
               <Select
-                value={{ value: "month", label: "Mensal" }}
+                defaultValue={{ value: "month", label: "Mensal" }}
                 options={[
                   { value: "month", label: "Mensal" },
                   { value: "week", label: "Semanal" },
                   { value: "day", label: "Diário" }
                 ]}
                 onChange={this.handleVisualizacaoChange}
+                theme={this.selectTheme}
               />
             </Form.Group>
           </Grid.Col>
 
           <Grid.Col>
             <Form.Group label="Ambiente">
-              <Form.Select></Form.Select>
+              <Select
+                options={ambienteOptions}
+                theme={this.selectTheme}
+                isMulti
+                closeMenuOnSelect={false}
+              />
             </Form.Group>
           </Grid.Col>
 
           <Grid.Col>
             <Form.Group label="Turma">
-              <Form.Select></Form.Select>
+              <Select
+                options={turmaOptions}
+                theme={this.selectTheme}
+                isMulti
+                closeMenuOnSelect={false}
+              />
             </Form.Group>
           </Grid.Col>
 
           <Grid.Col>
             <Form.Group label="Disciplina">
-              <Form.Select></Form.Select>
+              <Select
+                options={disciplinaOptions}
+                theme={this.selectTheme}
+                isMulti
+                closeMenuOnSelect={false}
+              />
             </Form.Group>
           </Grid.Col>
 
           <Grid.Col>
             <Form.Group label="Professor">
-              <Form.Select></Form.Select>
+              <Select
+                options={professorOptions}
+                theme={this.selectTheme}
+                isMulti
+                closeMenuOnSelect={false}
+              />
             </Form.Group>
           </Grid.Col>
 
           <Grid.Col>
             <Form.Group label="Turno">
-              <Form.Select></Form.Select>
+              <Select
+                options={[
+                  { value: 0, label: "Matutino" },
+                  { value: 1, label: "Vespertino" },
+                  { value: 2, label: "Noturno" }
+                ]}
+                theme={this.selectTheme}
+                isMulti
+                closeMenuOnSelect={false}
+              />
             </Form.Group>
           </Grid.Col>
 
           <Grid.Col>
             <Form.Group label="Horário">
-              <Form.Select></Form.Select>
+              <Select
+                options={horarioOptions}
+                theme={this.selectTheme}
+                isMulti
+                closeMenuOnSelect={false}
+              />
             </Form.Group>
           </Grid.Col>
         </Grid.Row>
@@ -265,9 +379,8 @@ export default class Reservas extends Component {
                 );
               }
 
-              return `${moment(dateStart).format(dateFormat)} - ${moment(
-                dateEnd
-              ).format(endFormat)}`;
+              return `${moment(dateStart).format(dateFormat)} - 
+                      ${moment(dateEnd).format(endFormat)}`;
             }
           }}
         />

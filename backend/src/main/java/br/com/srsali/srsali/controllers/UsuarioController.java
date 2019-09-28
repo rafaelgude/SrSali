@@ -1,6 +1,8 @@
 package br.com.srsali.srsali.controllers;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.srsali.srsali.enums.Funcao;
 import br.com.srsali.srsali.models.Usuario;
 import br.com.srsali.srsali.services.UsuarioService;
 
@@ -61,6 +64,8 @@ public class UsuarioController {
     
     @GetMapping("/authenticated")
     public ResponseEntity<Usuario> getAuthenticated() {
-        return ResponseEntity.ok().body(usuarioService.getAuthenticated());
+        var usuario = usuarioService.getAuthenticated();
+        usuario.setFuncoes(usuario.getFuncoes().stream().sorted(Comparator.comparingInt(Funcao::ordinal).reversed()).collect(Collectors.toSet()));
+        return ResponseEntity.ok().body(usuario);
     }
 }

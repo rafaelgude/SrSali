@@ -16,9 +16,10 @@ import br.com.srsali.srsali.repositories.TurmaRepository;
 public class TurmaService {
     
     @Autowired TurmaRepository turmaRepo;
+    @Autowired UsuarioService usuarioService;
     
     public Page<Turma> findAll(int page, int linesPerPage, String orderBy, String direction) {
-        return turmaRepo.findAll(PageRequest.of(page, linesPerPage, Direction.valueOf(direction.toUpperCase()), orderBy));
+        return turmaRepo.findAllByCursoInstituicao(PageRequest.of(page, linesPerPage, Direction.valueOf(direction.toUpperCase()), orderBy), usuarioService.getAuthenticated().getInstituicao());
     }
     
     public Turma find(int id) {

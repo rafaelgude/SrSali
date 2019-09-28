@@ -19,7 +19,7 @@ public class AmbienteService {
     @Autowired UsuarioService usuarioService;
     
     public Page<Ambiente> findAll(int page, int linesPerPage, String orderBy, String direction) {
-        return ambienteRepo.findAll(PageRequest.of(page, linesPerPage, Direction.valueOf(direction.toUpperCase()), orderBy));
+        return ambienteRepo.findAllByInstituicao(PageRequest.of(page, linesPerPage, Direction.valueOf(direction.toUpperCase()), orderBy), usuarioService.getAuthenticated().getInstituicao());
     }
     
     public Ambiente find(int id) {

@@ -41,7 +41,8 @@ export default class Login extends Component {
         this.setState({ errors: { others: message } });
       });
 
-      if (response) {
+      if (true) {
+        // if (response) {
         login(response.headers.authorization.replace("Bearer ", ""));
         this.props.history.push("/app");
       }

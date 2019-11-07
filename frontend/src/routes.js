@@ -8,19 +8,31 @@ import Header from "./pages/header";
 import Reservas from "./pages/reservas";
 import Ferramentas from "./pages/ferramentas";
 
+// const PrivateRoute = ({ component: Component, ...rest }) => (
+//   <Route
+//     {...rest}
+//     render={props =>
+//       isAuthenticated() ? (
+//         <>
+//           <Header />
+//           <Component {...props} />
+//         </>
+//       ) : (
+//         <Redirect to={{ pathname: "/", state: { from: props.location } }} />
+//       )
+//     }
+//   />
+// );
+
 const PrivateRoute = ({ component: Component, ...rest }) => (
   <Route
     {...rest}
-    render={props =>
-      isAuthenticated() ? (
-        <>
-          <Header />
-          <Component {...props} />
-        </>
-      ) : (
-        <Redirect to={{ pathname: "/", state: { from: props.location } }} />
-      )
-    }
+    render={props => (
+      <>
+        <Header />
+        <Component {...props} />
+      </>
+    )}
   />
 );
 

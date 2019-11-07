@@ -9,6 +9,7 @@ import "tui-calendar/dist/tui-calendar.css";
 import "tui-date-picker/dist/tui-date-picker.css";
 import "tui-time-picker/dist/tui-time-picker.css";
 import "./styles.css";
+import ReservaCards from "../../components/ReservaCards";
 
 const dateFormat = "DD/MM/YYYY HH:mm";
 
@@ -40,7 +41,9 @@ export default class Reservas extends Component {
       calendarProps: {
         view: "month",
         ...schedulesProp
-      }
+      },
+      isTurnoDefined: false,
+      isHorarioDefined: false
     };
 
     this.loadSelects();
@@ -119,7 +122,10 @@ export default class Reservas extends Component {
       turmaOptions,
       disciplinaOptions,
       professorOptions,
-      horarioOptions
+      horarioOptions,
+      isTurnoDefined,
+      isHorarioDefined,
+      calendarProps
     } = this.state;
 
     return (
@@ -195,6 +201,9 @@ export default class Reservas extends Component {
                 theme={this.selectTheme}
                 isMulti
                 closeMenuOnSelect={false}
+                onChange={event =>
+                  this.setState({ isTurnoDefined: event !== null })
+                }
               />
             </Form.Group>
           </Grid.Col>
@@ -206,44 +215,53 @@ export default class Reservas extends Component {
                 theme={this.selectTheme}
                 isMulti
                 closeMenuOnSelect={false}
+                onChange={event =>
+                  this.setState({ isHorarioDefined: event !== null })
+                }
               />
             </Form.Group>
           </Grid.Col>
         </Grid.Row>
 
-        <Calendar
-          isReadOnly
-          useDetailPopup
-          {...this.state.calendarProps}
-          taskView={false}
-          setTheme={{ "week.timegridLeft.width": "500px" }}
-          scheduleView={["time"]}
-          month={{
-            startDayOfWeek: 0,
-            narrowWeekend: true,
-            ...dayNamesProp
-          }}
-          week={{ narrowWeekend: true, ...dayNamesProp }}
-          template={{
-            popupDetailDate: (isAllDay, start, end) => {
-              const isSameDate = moment(start).isSame(end);
-              const endFormat = `${isSameDate ? "" : "DD/MM/YYYY"} HH:mm`;
+        {calendarProps.view === "day" && isTurnoDefined && isHorarioDefined ? (
+          <ReservaCards />
+        ) : (
+          <Calendar
+            isReadOnly
+            useDetailPopup
+            {...this.state.calendarProps}
+            taskView={false}
+            setTheme={{ "week.timegridLeft.width": "500px" }}
+            scheduleView={["time"]}
+            month={{
+              startDayOfWeek: 0,
+              narrowWeekend: true,
+              ...dayNamesProp
+            }}
+            week={{ narrowWeekend: true, ...dayNamesProp }}
+            template={{
+              popupDetailDate: (isAllDay, start, end) => {
+                const isSameDate = moment(start).isSame(end);
+                const endFormat = `${isSameDate ? "" : "DD/MM/YYYY"} HH:mm`;
 
-              const dateStart = start.toDate();
-              const dateEnd = end.toDate();
+                const dateStart = start.toDate();
+                const dateEnd = end.toDate();
 
-              if (isAllDay) {
-                return (
-                  moment(dateStart).format(dateFormat) +
-                  (isSameDate ? "" : ` - ${moment(dateEnd).format(dateFormat)}`)
-                );
-              }
+                if (isAllDay) {
+                  return (
+                    moment(dateStart).format(dateFormat) +
+                    (isSameDate
+                      ? ""
+                      : ` - ${moment(dateEnd).format(dateFormat)}`)
+                  );
+                }
 
-              return `${moment(dateStart).format(dateFormat)} - 
+                return `${moment(dateStart).format(dateFormat)} - 
                       ${moment(dateEnd).format(endFormat)}`;
-            }
-          }}
-        />
+              }
+            }}
+          />
+        )}
       </>
     );
   }

@@ -36,11 +36,7 @@ export default class Reservas extends Component {
       turmaOptions: [],
       disciplinaOptions: [],
       professorOptions: [],
-      // horarioOptions: [],
-      horarioOptions: [
-        { value: "Teste1", label: "Teste1" },
-        { value: "Teste2", label: "Teste2" }
-      ],
+      horarioOptions: [],
       calendarProps: {
         view: "month",
         ...schedulesProp

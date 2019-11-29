@@ -9,8 +9,12 @@ import "tui-calendar/dist/tui-calendar.css";
 import "tui-date-picker/dist/tui-date-picker.css";
 import "tui-time-picker/dist/tui-time-picker.css";
 import "./styles.css";
+import ReservaCard from "../../components/ReservaCard";
 
-const dateFormat = "DD/MM/YYYY HH:mm";
+const dateFormat = "DD/MM/YYYY";
+const dateTimeFormat = "DD/MM/YYYY HH:mm:ss";
+const timeFormat = "HH:mm:ss";
+const calendarFormat = "DD/MM/YYYY HH:mm";
 
 const dayNamesProp = {
   daynames: [
@@ -28,6 +32,11 @@ function formatUpperWord(text) {
   return text.charAt(0) + text.slice(1).toLowerCase();
 }
 
+function now(time) {
+  if (time) return moment(moment().format(dateFormat) + time, dateTimeFormat);
+  else return moment();
+}
+
 export default class Reservas extends Component {
   constructor(props) {
     super(props);
@@ -37,10 +46,18 @@ export default class Reservas extends Component {
       disciplinaOptions: [],
       professorOptions: [],
       horarioOptions: [],
+      horarios: [],
       calendarProps: {
-        view: "month",
+        view: "day",
         ...schedulesProp
-      }
+      },
+      currentHorarios: [],
+      currentTurnos: [],
+      turnoOptions: [
+        { value: 0, label: "Matutino" },
+        { value: 1, label: "Vespertino" },
+        { value: 2, label: "Noturno" }
+      ]
     };
 
     this.loadSelects();
@@ -103,6 +120,7 @@ export default class Reservas extends Component {
     const resHorarios = await api.get("/horarios?linesPerPage=100");
     if (resHorarios) {
       this.setState({
+        horarios: resHorarios.data.content,
         horarioOptions: resHorarios.data.content.map(horario => {
           return {
             value: horario.id,
@@ -111,6 +129,40 @@ export default class Reservas extends Component {
         })
       });
     }
+
+    const { horarios } = this.state;
+    var newHorario = horarios[0];
+
+    const filteredHorarios = horarios
+      .filter(horario => {
+        return (
+          now(horario.horaInicio).isBetween(now(), now().add(15, "minutes")) ||
+          now().isBetween(now(horario.horaInicio), now(horario.horaFim))
+        );
+      })
+      .sort(
+        (a, b) => now(b.horaInicio).valueOf() - now(a.horaInicio).valueOf()
+      );
+
+    if (filteredHorarios.length > 0) newHorario = filteredHorarios[0];
+
+    var horarioSelect = this.refs.horarioSelect;
+    horarioSelect.state.value = this.state.horarioOptions.find(
+      x => x.value === newHorario.id
+    );
+    horarioSelect.focus();
+
+    var turnoSelect = this.refs.turnoSelect;
+    turnoSelect.state.value = this.state.turnoOptions.find(
+      x => x.label === formatUpperWord(newHorario.turno)
+    );
+    turnoSelect.focus();
+    turnoSelect.blur();
+
+    this.setState({
+      currentHorarios: [horarioSelect.state.value],
+      currentTurnos: [turnoSelect.state.value]
+    });
   }
 
   render() {
@@ -119,7 +171,11 @@ export default class Reservas extends Component {
       turmaOptions,
       disciplinaOptions,
       professorOptions,
-      horarioOptions
+      horarioOptions,
+      calendarProps,
+      turnoOptions,
+      currentHorarios,
+      currentTurnos
     } = this.state;
 
     return (
@@ -128,7 +184,7 @@ export default class Reservas extends Component {
           <Grid.Col>
             <Form.Group label="Visualização">
               <Select
-                defaultValue={{ value: "month", label: "Mensal" }}
+                defaultValue={{ value: "day", label: "Diário" }}
                 options={[
                   { value: "month", label: "Mensal" },
                   { value: "week", label: "Semanal" },
@@ -187,14 +243,17 @@ export default class Reservas extends Component {
           <Grid.Col>
             <Form.Group label="Turno">
               <Select
-                options={[
-                  { value: 0, label: "Matutino" },
-                  { value: 1, label: "Vespertino" },
-                  { value: 2, label: "Noturno" }
-                ]}
-                theme={this.selectTheme}
+                ref="turnoSelect"
                 isMulti
+                options={turnoOptions}
+                theme={this.selectTheme}
                 closeMenuOnSelect={false}
+                onChange={event => {
+                  if (event)
+                    this.setState({
+                      currentTurnos: event
+                    });
+                }}
               />
             </Form.Group>
           </Grid.Col>
@@ -202,48 +261,63 @@ export default class Reservas extends Component {
           <Grid.Col>
             <Form.Group label="Horário">
               <Select
+                ref="horarioSelect"
                 options={horarioOptions}
                 theme={this.selectTheme}
                 isMulti
                 closeMenuOnSelect={false}
+                onChange={event => {
+                  if (event)
+                    this.setState({
+                      currentHorarios: event
+                    });
+                }}
               />
             </Form.Group>
           </Grid.Col>
         </Grid.Row>
 
-        <Calendar
-          isReadOnly
-          useDetailPopup
-          {...this.state.calendarProps}
-          taskView={false}
-          setTheme={{ "week.timegridLeft.width": "500px" }}
-          scheduleView={["time"]}
-          month={{
-            startDayOfWeek: 0,
-            narrowWeekend: true,
-            ...dayNamesProp
-          }}
-          week={{ narrowWeekend: true, ...dayNamesProp }}
-          template={{
-            popupDetailDate: (isAllDay, start, end) => {
-              const isSameDate = moment(start).isSame(end);
-              const endFormat = `${isSameDate ? "" : "DD/MM/YYYY"} HH:mm`;
+        {calendarProps.view === "day" &&
+        currentTurnos.length > 0 &&
+        currentHorarios.length > 0 ? (
+          <ReservaCard />
+        ) : (
+          <Calendar
+            isReadOnly
+            useDetailPopup
+            {...this.state.calendarProps}
+            taskView={false}
+            setTheme={{ "week.timegridLeft.width": "500px" }}
+            scheduleView={["time"]}
+            month={{
+              startDayOfWeek: 0,
+              narrowWeekend: true,
+              ...dayNamesProp
+            }}
+            week={{ narrowWeekend: true, ...dayNamesProp }}
+            template={{
+              popupDetailDate: (isAllDay, start, end) => {
+                const isSameDate = moment(start).isSame(end);
+                const endFormat = `${isSameDate ? "" : "DD/MM/YYYY"} HH:mm`;
 
-              const dateStart = start.toDate();
-              const dateEnd = end.toDate();
+                const dateStart = start.toDate();
+                const dateEnd = end.toDate();
 
-              if (isAllDay) {
-                return (
-                  moment(dateStart).format(dateFormat) +
-                  (isSameDate ? "" : ` - ${moment(dateEnd).format(dateFormat)}`)
-                );
+                if (isAllDay) {
+                  return (
+                    moment(dateStart).format(calendarFormat) +
+                    (isSameDate
+                      ? ""
+                      : ` - ${moment(dateEnd).format(calendarFormat)}`)
+                  );
+                }
+                return `${moment(dateStart).format(calendarFormat)} - ${moment(
+                  dateEnd
+                ).format(endFormat)}`;
               }
-
-              return `${moment(dateStart).format(dateFormat)} - 
-                      ${moment(dateEnd).format(endFormat)}`;
-            }
-          }}
-        />
+            }}
+          />
+        )}
       </>
     );
   }

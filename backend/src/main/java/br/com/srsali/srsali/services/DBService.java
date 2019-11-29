@@ -96,7 +96,10 @@ public class DBService {
         var h19 = new Horario("Primeiro Horário", Turno.NOTURNO, LocalTime.of(19, 10), LocalTime.of(20, 50), uvv);
         var h21 = new Horario("Segundo Horário", Turno.NOTURNO, LocalTime.of(21, 05), LocalTime.of(22, 45), uvv);
         
-        horarioRepo.saveAll(List.of(h07, h09, h19, h21));
+        // Excluir depois
+        var h22 = new Horario("Seila", Turno.NOTURNO, LocalTime.of(22, 05), LocalTime.of(23, 45), uvv);
+        
+        horarioRepo.saveAll(List.of(h07, h09, h19, h21, h22));
         
         reservaRepo.saveAll(List.of(new Reserva(Set.of(turma), ambLab1, uvv, h19, profSusi, discLabSoRedes, LocalDate.of(2019, 9, 27), false)));
         reservaRepo.saveAll(List.of(new Reserva(Set.of(turma), ambLab1, uvv, h19, profSusi, discLabSoRedes, LocalDate.of(2019, 9, 27), false)));

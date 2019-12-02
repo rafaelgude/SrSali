@@ -13,7 +13,6 @@ import ReservaCard from "../../components/ReservaCard";
 
 const dateFormat = "DD/MM/YYYY";
 const dateTimeFormat = "DD/MM/YYYY HH:mm:ss";
-const timeFormat = "HH:mm:ss";
 const calendarFormat = "DD/MM/YYYY HH:mm";
 
 const dayNamesProp = {
@@ -34,12 +33,15 @@ function formatUpperWord(text) {
 
 function now(time) {
   if (time) return moment(moment().format(dateFormat) + time, dateTimeFormat);
-  else return moment();
+  return moment();
 }
 
 export default class Reservas extends Component {
   constructor(props) {
     super(props);
+    this.turnoSelect = React.createRef();
+    this.horarioSelect = React.createRef();
+    this.disciplinaSelect = React.createRef();
     this.state = {
       ambienteOptions: [],
       turmaOptions: [],
@@ -53,6 +55,8 @@ export default class Reservas extends Component {
       },
       currentHorarios: [],
       currentTurnos: [],
+      currentDisciplinas: [],
+      currentAmbientes: [],
       turnoOptions: [
         { value: 0, label: "Matutino" },
         { value: 1, label: "Vespertino" },
@@ -63,11 +67,48 @@ export default class Reservas extends Component {
     this.loadSelects();
   }
 
-  handleVisualizacaoChange = selectedOption => {
-    const { calendarProps } = this.state;
-    calendarProps.view = selectedOption.value;
-    this.setState({ calendarProps });
-  };
+  componentDidUpdate(prevProps) {
+    if (this.props !== prevProps) this.loadSelects();
+  }
+
+  setInitialHorarioTurno() {
+    const { horarios, horarioOptions, turnoOptions } = this.state;
+    if (horarioOptions.length <= 0 || turnoOptions.length <= 0) return;
+
+    let newHorario = horarios[0];
+
+    const filteredHorarios = horarios
+      .filter(horario => {
+        return (
+          now(horario.horaInicio).isBetween(now(), now().add(15, "minutes")) ||
+          now().isBetween(now(horario.horaInicio), now(horario.horaFim))
+        );
+      })
+      .sort(
+        (a, b) => now(b.horaInicio).valueOf() - now(a.horaInicio).valueOf()
+      );
+
+    if (filteredHorarios.length > 0) [newHorario] = filteredHorarios;
+
+    const horarioSelect = this.horarioSelect.current;
+    const turnoSelect = this.turnoSelect.current;
+
+    horarioSelect.state.value = horarioOptions.find(
+      x => x.value === newHorario.id
+    );
+    horarioSelect.focus();
+
+    turnoSelect.state.value = turnoOptions.find(
+      x => x.label === formatUpperWord(newHorario.turno)
+    );
+    turnoSelect.focus();
+    turnoSelect.blur();
+
+    this.setState({
+      currentHorarios: [horarioSelect.state.value],
+      currentTurnos: [turnoSelect.state.value]
+    });
+  }
 
   selectTheme = theme => {
     return {
@@ -80,8 +121,39 @@ export default class Reservas extends Component {
     };
   };
 
+  handleVisualizacaoChange = selectedOption => {
+    const { calendarProps } = this.state;
+    calendarProps.view = selectedOption.value;
+    this.setState({ calendarProps });
+  };
+
+  async loadDisciplinas(currentTurmas) {
+    const turmasId = currentTurmas
+      ? currentTurmas.map(event => event.value).join(",")
+      : "";
+
+    const resDisciplinas = await api.get(
+      `/disciplinas?linesPerPage=100&turmasId=${turmasId}`
+    );
+    if (resDisciplinas) {
+      this.setState({
+        disciplinaOptions: resDisciplinas.data.content.map(disciplina => {
+          return { value: disciplina.id, label: disciplina.nome };
+        })
+      });
+    }
+  }
+
   async loadSelects() {
-    const resAmbientes = await api.get("/ambientes?linesPerPage=100");
+    this.setState({ currentAmbientes: [] });
+
+    const tipoAmbiente = window.location.href.endsWith("/reservas/laboratorios")
+      ? 1
+      : 0;
+
+    const resAmbientes = await api.get(
+      `/ambientes?linesPerPage=100&tipoAmbiente=${tipoAmbiente}`
+    );
     if (resAmbientes) {
       this.setState({
         ambienteOptions: resAmbientes.data.content.map(ambiente => {
@@ -99,14 +171,7 @@ export default class Reservas extends Component {
       });
     }
 
-    const resDisciplinas = await api.get("/disciplinas?linesPerPage=100");
-    if (resDisciplinas) {
-      this.setState({
-        disciplinaOptions: resDisciplinas.data.content.map(disciplina => {
-          return { value: disciplina.id, label: disciplina.nome };
-        })
-      });
-    }
+    await this.loadDisciplinas();
 
     const resProfessores = await api.get("/professores?linesPerPage=100");
     if (resProfessores) {
@@ -130,39 +195,7 @@ export default class Reservas extends Component {
       });
     }
 
-    const { horarios } = this.state;
-    var newHorario = horarios[0];
-
-    const filteredHorarios = horarios
-      .filter(horario => {
-        return (
-          now(horario.horaInicio).isBetween(now(), now().add(15, "minutes")) ||
-          now().isBetween(now(horario.horaInicio), now(horario.horaFim))
-        );
-      })
-      .sort(
-        (a, b) => now(b.horaInicio).valueOf() - now(a.horaInicio).valueOf()
-      );
-
-    if (filteredHorarios.length > 0) newHorario = filteredHorarios[0];
-
-    var horarioSelect = this.refs.horarioSelect;
-    horarioSelect.state.value = this.state.horarioOptions.find(
-      x => x.value === newHorario.id
-    );
-    horarioSelect.focus();
-
-    var turnoSelect = this.refs.turnoSelect;
-    turnoSelect.state.value = this.state.turnoOptions.find(
-      x => x.label === formatUpperWord(newHorario.turno)
-    );
-    turnoSelect.focus();
-    turnoSelect.blur();
-
-    this.setState({
-      currentHorarios: [horarioSelect.state.value],
-      currentTurnos: [turnoSelect.state.value]
-    });
+    this.setInitialHorarioTurno();
   }
 
   render() {
@@ -175,7 +208,9 @@ export default class Reservas extends Component {
       calendarProps,
       turnoOptions,
       currentHorarios,
-      currentTurnos
+      currentTurnos,
+      currentDisciplinas,
+      currentAmbientes
     } = this.state;
 
     return (
@@ -203,6 +238,8 @@ export default class Reservas extends Component {
                 theme={this.selectTheme}
                 isMulti
                 closeMenuOnSelect={false}
+                onChange={event => this.setState({ currentAmbientes: event })}
+                value={currentAmbientes}
               />
             </Form.Group>
           </Grid.Col>
@@ -214,6 +251,10 @@ export default class Reservas extends Component {
                 theme={this.selectTheme}
                 isMulti
                 closeMenuOnSelect={false}
+                onChange={event => {
+                  this.loadDisciplinas(event);
+                  this.setState({ currentDisciplinas: [] });
+                }}
               />
             </Form.Group>
           </Grid.Col>
@@ -221,10 +262,13 @@ export default class Reservas extends Component {
           <Grid.Col>
             <Form.Group label="Disciplina">
               <Select
+                ref={this.disciplinaSelect}
                 options={disciplinaOptions}
                 theme={this.selectTheme}
                 isMulti
                 closeMenuOnSelect={false}
+                onChange={event => this.setState({ currentDisciplinas: event })}
+                value={currentDisciplinas}
               />
             </Form.Group>
           </Grid.Col>
@@ -243,16 +287,16 @@ export default class Reservas extends Component {
           <Grid.Col>
             <Form.Group label="Turno">
               <Select
-                ref="turnoSelect"
+                ref={this.turnoSelect}
                 isMulti
                 options={turnoOptions}
                 theme={this.selectTheme}
                 closeMenuOnSelect={false}
                 onChange={event => {
-                  if (event)
-                    this.setState({
-                      currentTurnos: event
-                    });
+                  this.setState({
+                    currentTurnos: event
+                  });
+                  this.loadDisciplinas();
                 }}
               />
             </Form.Group>
@@ -261,16 +305,15 @@ export default class Reservas extends Component {
           <Grid.Col>
             <Form.Group label="Horário">
               <Select
-                ref="horarioSelect"
+                ref={this.horarioSelect}
                 options={horarioOptions}
                 theme={this.selectTheme}
                 isMulti
                 closeMenuOnSelect={false}
                 onChange={event => {
-                  if (event)
-                    this.setState({
-                      currentHorarios: event
-                    });
+                  this.setState({
+                    currentHorarios: event
+                  });
                 }}
               />
             </Form.Group>
@@ -278,14 +321,16 @@ export default class Reservas extends Component {
         </Grid.Row>
 
         {calendarProps.view === "day" &&
-        currentTurnos.length > 0 &&
-        currentHorarios.length > 0 ? (
+        currentTurnos &&
+        currentHorarios &&
+        currentTurnos.length === 1 &&
+        currentHorarios.length === 1 ? (
           <ReservaCard />
         ) : (
           <Calendar
             isReadOnly
             useDetailPopup
-            {...this.state.calendarProps}
+            {...calendarProps}
             taskView={false}
             setTheme={{ "week.timegridLeft.width": "500px" }}
             scheduleView={["time"]}

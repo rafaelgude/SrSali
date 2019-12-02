@@ -10,10 +10,27 @@ const LinkComponent = NavLink;
 const navBarItems = [
   {
     value: "Reservas",
-    to: "/app/reservas",
     icon: "home",
-    LinkComponent,
-    useExact: true
+    subItems: [
+      {
+        value: "Salas",
+        to: "/app/reservas/salas",
+        useExact: true,
+        LinkComponent
+      },
+      {
+        value: "Laboratórios",
+        to: "/app/reservas/laboratorios",
+        useExact: true,
+        LinkComponent
+      },
+      {
+        value: "Gerenciamento",
+        to: "/app/reservas",
+        useExact: true,
+        LinkComponent
+      }
+    ]
   },
   {
     value: "Ambientes",
@@ -70,7 +87,7 @@ export default class Header extends Component {
     if (response) {
       this.setState({
         usuario: {
-          maxFuncao: this.getFuncao(response.data.funcoes[0]),
+          maxFuncao: this.getFuncao(response.data.funcoes.sort()[0]),
           ...response.data
         }
       });

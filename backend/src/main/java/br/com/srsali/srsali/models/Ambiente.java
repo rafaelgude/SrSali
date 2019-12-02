@@ -45,7 +45,7 @@ public class Ambiente implements Serializable {
 	@NotNull(message = "Tipo de Ambiente é obrigatório.")
 	private TipoAmbiente tipoAmbiente = TipoAmbiente.SALA_AULA;
 
-	private boolean ativo;
+	private boolean ativo = true;
 	
 	@JsonIgnoreProperties(value = "ambiente")
 	@OneToMany(mappedBy = "id.ambiente", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -54,13 +54,12 @@ public class Ambiente implements Serializable {
     public Ambiente() {
     }
     
-    public Ambiente(String nome, int capacidadeAlunos, InstituicaoDeEnsino instituicao, TipoAmbiente tipoAmbiente, boolean ativo) {
+    public Ambiente(String nome, int capacidadeAlunos, InstituicaoDeEnsino instituicao, TipoAmbiente tipoAmbiente) {
         super();
         this.nome = nome;
         this.capacidadeAlunos = capacidadeAlunos;
         this.instituicao = instituicao;
         this.tipoAmbiente = tipoAmbiente;
-        this.ativo = ativo;
     }
 
     public int getId() {

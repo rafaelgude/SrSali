@@ -64,15 +64,15 @@ public class Reserva implements Serializable {
     public Reserva() {
     }
 
-    public Reserva(Set<Turma> turmas, Ambiente ambiente, InstituicaoDeEnsino instituicao, Horario horario, Professor professor, 
-                   Disciplina disciplina, LocalDate data, boolean preReserva) {
+    public Reserva(Set<Turma> turmas, Ambiente ambiente, InstituicaoDeEnsino instituicao, Professor professor, 
+                   Disciplina disciplina, Horario horario, LocalDate data, boolean preReserva) {
         super();
         this.turmas = turmas;
         this.ambiente = ambiente;
         this.instituicao = instituicao;
-        this.horario = horario;
         this.professor = professor;
         this.disciplina = disciplina;
+        this.horario = horario;
         this.data = data;
         this.preReserva = preReserva;
     }

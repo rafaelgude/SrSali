@@ -34,7 +34,7 @@ public class Disciplina implements Serializable {
 	@NotNull(message = "Instituição é obrigatório.")
 	private InstituicaoDeEnsino instituicao;
 
-	private boolean ativo;
+	private boolean ativo = true;
 	
 	@ManyToMany
     @JoinTable(name = "disciplina_ferramenta", 
@@ -49,11 +49,10 @@ public class Disciplina implements Serializable {
 	    this.id = id;
     }
 	
-	public Disciplina(String nome, InstituicaoDeEnsino instituicao, boolean ativo, Set<Ferramenta> ferramentas) {
+	public Disciplina(String nome, InstituicaoDeEnsino instituicao, Set<Ferramenta> ferramentas) {
         super();
         this.nome = nome;
         this.instituicao = instituicao;
-        this.ativo = ativo;
         this.ferramentas = ferramentas;
     }
 

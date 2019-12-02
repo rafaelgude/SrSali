@@ -29,7 +29,7 @@ public class Ferramenta implements Serializable {
 	@NotNull(message = "Instituição é obrigatório.")
 	private InstituicaoDeEnsino instituicao;
 
-	private boolean ativo;
+	private boolean ativo = true;
 	
 	public Ferramenta() {
     }
@@ -39,11 +39,10 @@ public class Ferramenta implements Serializable {
         this.id = id;
     }
 
-    public Ferramenta(String nome, InstituicaoDeEnsino instituicao, boolean ativo) {
+    public Ferramenta(String nome, InstituicaoDeEnsino instituicao) {
         super();
         this.nome = nome;
         this.instituicao = instituicao;
-        this.ativo = ativo;
     }
 
     public int getId() {

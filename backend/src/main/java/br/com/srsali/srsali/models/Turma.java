@@ -27,7 +27,7 @@ public class Turma implements Serializable {
 
 	private int quantidadeAlunos;
 
-	private boolean ativo;
+	private boolean ativo = true;
 	
 	public Turma() {
     }
@@ -37,12 +37,11 @@ public class Turma implements Serializable {
         this.id = id;
     }
 
-    public Turma(String nome, Curso curso, int quantidadeAlunos, boolean ativo) {
+    public Turma(String nome, Curso curso, int quantidadeAlunos) {
         super();
         this.nome = nome;
         this.curso = curso;
         this.quantidadeAlunos = quantidadeAlunos;
-        this.ativo = ativo;
     }
 
     public int getId() {

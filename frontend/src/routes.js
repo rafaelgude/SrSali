@@ -44,13 +44,19 @@ const Routes = () => (
         <Route exact path="/" component={Home} />
         <NoAuthRoute path="/cadastro" component={Cadastro} />
         <NoAuthRoute path="/login" component={Login} />
-        <PrivateRoute path="/app/reservas" component={Reservas} />
-        <PrivateRoute path="/app/ferramentas" component={Ferramentas} />
+        <PrivateRoute exact path="/app/reservas" component={Reservas} />
+        <PrivateRoute exact path="/app/reservas/salas" component={Reservas} />
+        <PrivateRoute
+          exact
+          path="/app/reservas/laboratorios"
+          component={Reservas}
+        />
+        <PrivateRoute exact path="/app/ferramentas" component={Ferramentas} />
         <PrivateRoute
           exact
           path="/app"
           component={() => {
-            return <Redirect to={{ pathname: "/app/reservas" }} />;
+            return <Redirect to={{ pathname: "/app/reservas/salas" }} />;
           }}
         />
         <Route

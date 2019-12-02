@@ -69,7 +69,7 @@ public class Usuario implements Serializable {
 	@NotNull(message = "Instituição é obrigatório.")
 	private InstituicaoDeEnsino instituicao;
 	
-	private boolean ativo;
+	private boolean ativo = true;
 	
 	@JsonIgnore
 	@OneToMany(mappedBy = "usuario", orphanRemoval = true)
@@ -85,7 +85,6 @@ public class Usuario implements Serializable {
         this.senha = senha;
         this.telefone = telefone;
         this.instituicao = instituicao;
-        this.ativo = true;
     }
 
     public int getId() {

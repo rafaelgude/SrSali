@@ -49,11 +49,10 @@ public class Curso implements Serializable {
 	public Curso() {
 	}
 
-	public Curso(String nome, InstituicaoDeEnsino instituicao, boolean ativo, Set<Disciplina> disciplinas) {
+	public Curso(String nome, InstituicaoDeEnsino instituicao, Set<Disciplina> disciplinas) {
         super();
         this.nome = nome;
         this.instituicao = instituicao;
-        this.ativo = ativo;
         this.disciplinas = disciplinas;
     }
 

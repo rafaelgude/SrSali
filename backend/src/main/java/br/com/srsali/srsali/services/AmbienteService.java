@@ -7,6 +7,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
+import br.com.srsali.srsali.enums.TipoAmbiente;
 import br.com.srsali.srsali.exceptions.DataIntegrityException;
 import br.com.srsali.srsali.exceptions.ObjectNotFoundException;
 import br.com.srsali.srsali.models.Ambiente;
@@ -18,8 +19,8 @@ public class AmbienteService {
     @Autowired AmbienteRepository ambienteRepo;
     @Autowired UsuarioService usuarioService;
     
-    public Page<Ambiente> findAll(int page, int linesPerPage, String orderBy, String direction) {
-        return ambienteRepo.findAllByInstituicao(PageRequest.of(page, linesPerPage, Direction.valueOf(direction.toUpperCase()), orderBy), usuarioService.getAuthenticated().getInstituicao());
+    public Page<Ambiente> findAll(int page, int linesPerPage, String orderBy, String direction, TipoAmbiente tipoAmbiente) {
+        return ambienteRepo.findAllByInstituicao(PageRequest.of(page, linesPerPage, Direction.valueOf(direction.toUpperCase()), orderBy), usuarioService.getAuthenticated().getInstituicao(), tipoAmbiente);
     }
     
     public Ambiente find(int id) {

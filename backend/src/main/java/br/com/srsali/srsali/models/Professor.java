@@ -35,18 +35,17 @@ public class Professor implements Serializable {
 	@NotNull(message = "Instituição é obrigatório.")
 	private InstituicaoDeEnsino instituicao;
 	
-	private boolean ativo;
+	private boolean ativo = true;
 	
 	public Professor() {
     }
 	
-    public Professor(String email, String nome, Usuario usuario, InstituicaoDeEnsino instituicao, boolean ativo) {
+    public Professor(String email, String nome, Usuario usuario, InstituicaoDeEnsino instituicao) {
         super();
         this.nome = nome;
         this.email = email;
         this.usuario = usuario;
         this.instituicao = instituicao;
-        this.ativo = ativo;
     }
 
     public int getId() {

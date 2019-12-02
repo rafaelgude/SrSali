@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.srsali.srsali.enums.TipoAmbiente;
 import br.com.srsali.srsali.models.Ambiente;
 import br.com.srsali.srsali.services.AmbienteService;
 
@@ -29,8 +30,9 @@ public class AmbienteController {
     public ResponseEntity<Page<Ambiente>> findAll(@RequestParam(value="page", defaultValue="0") int page, 
                                                   @RequestParam(value="linesPerPage", defaultValue="24") int linesPerPage, 
                                                   @RequestParam(value="orderBy", defaultValue="nome") String orderBy, 
-                                                  @RequestParam(value="direction", defaultValue="ASC") String direction) {
-        return ResponseEntity.ok().body(ambienteService.findAll(page, linesPerPage, orderBy, direction));
+                                                  @RequestParam(value="direction", defaultValue="ASC") String direction,
+                                                  @RequestParam(value="tipoAmbiente", defaultValue="0") String tipoAmbiente) {
+        return ResponseEntity.ok().body(ambienteService.findAll(page, linesPerPage, orderBy, direction, TipoAmbiente.toEnum(tipoAmbiente)));
     }
 	
 	@GetMapping("/{id}")

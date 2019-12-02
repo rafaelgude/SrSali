@@ -21,15 +21,14 @@ public class InstituicaoDeEnsino implements Serializable {
 	@Size(max = 60)
 	private String nome;
 	
-	private boolean ativo;
+	private boolean ativo = true;
 	
 	public InstituicaoDeEnsino() {
     }
 	
-    public InstituicaoDeEnsino(String nome, boolean ativo) {
+    public InstituicaoDeEnsino(String nome) {
         super();
         this.nome = nome;
-        this.ativo = ativo;
     }
 
     public int getId() {

@@ -61,7 +61,8 @@ export default class Reservas extends Component {
         { value: 0, label: "Matutino" },
         { value: 1, label: "Vespertino" },
         { value: 2, label: "Noturno" }
-      ]
+      ],
+      reservas: []
     };
 
     this.loadSelects();
@@ -196,6 +197,16 @@ export default class Reservas extends Component {
     }
 
     this.setInitialHorarioTurno();
+    this.loadReservas();
+  }
+
+  async loadReservas() {
+    const res = await api.get("/horarios?linesPerPage=100");
+    if (res) {
+      this.setState({
+        reservas: res.data.content
+      });
+    }
   }
 
   render() {
@@ -325,7 +336,9 @@ export default class Reservas extends Component {
         currentHorarios &&
         currentTurnos.length === 1 &&
         currentHorarios.length === 1 ? (
-          <ReservaCard />
+          <Grid.Row cards>
+            <ReservaCard />
+          </Grid.Row>
         ) : (
           <Calendar
             isReadOnly

@@ -1,0 +1,18 @@
+.card-header {
+  display: block !important;
+  padding: 0.5rem !important;
+  min-height: 0 !important;
+  text-align: center;
+  font-size: 1.3rem;
+  color: #4340bf;
+}
+
+.card-body {
+  font-size: 1.1rem;
+}
+
+.card-body,
+.card-footer {
+  padding: 0.5rem !important;
+  text-align: center;
+}

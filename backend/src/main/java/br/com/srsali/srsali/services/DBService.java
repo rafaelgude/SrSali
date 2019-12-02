@@ -126,7 +126,7 @@ public class DBService {
         
         // NOTRUNO 19h
         reservaRepo.saveAll(List.of(new Reserva(Set.of(si8n), laboratorios.get(5), uvv, professores.get(1), discGestaoProjetos, h19, LocalDate.of(2019, 12, 05), false),
-                                    new Reserva(Set.of(si6n), laboratorios.get(4), uvv, professores.get(6), discBancoDados, h19, LocalDate.of(2019, 12, 05), false),
+                                    new Reserva(Set.of(si6n, cc6m), laboratorios.get(4), uvv, professores.get(6), discBancoDados, h19, LocalDate.of(2019, 12, 05), false),
                                     new Reserva(Set.of(si4n), laboratorios.get(3), uvv, professores.get(3), discProg2, h19, LocalDate.of(2019, 12, 05), false),
                                     new Reserva(Set.of(si2n), laboratorios.get(2), uvv, professores.get(7), discProg1, h19, LocalDate.of(2019, 12, 05), false),
                                     new Reserva(Set.of(em8n), salas.get(27), uvv, professores.get(0), discCalculo, h19, LocalDate.of(2019, 12, 05), false)));

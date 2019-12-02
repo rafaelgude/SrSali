@@ -62,7 +62,8 @@ export default class Reservas extends Component {
         { value: 1, label: "Vespertino" },
         { value: 2, label: "Noturno" }
       ],
-      reservas: []
+      reservas: [],
+      tipoAmbiente: 0
     };
 
     this.loadSelects();
@@ -146,11 +147,14 @@ export default class Reservas extends Component {
   }
 
   async loadSelects() {
-    this.setState({ currentAmbientes: [] });
+    this.setState({
+      currentAmbientes: [],
+      tipoAmbiente: window.location.href.endsWith("/reservas/laboratorios")
+        ? 1
+        : 0
+    });
 
-    const tipoAmbiente = window.location.href.endsWith("/reservas/laboratorios")
-      ? 1
-      : 0;
+    const { tipoAmbiente } = this.state;
 
     const resAmbientes = await api.get(
       `/ambientes?linesPerPage=100&tipoAmbiente=${tipoAmbiente}`
@@ -201,7 +205,10 @@ export default class Reservas extends Component {
   }
 
   async loadReservas() {
-    const res = await api.get("/horarios?linesPerPage=100");
+    const { tipoAmbiente } = this.state;
+    const res = await api.get(
+      `/reservas?linesPerPage=100&tipoAmbiente=${tipoAmbiente}`
+    );
     if (res) {
       this.setState({
         reservas: res.data.content
@@ -221,7 +228,8 @@ export default class Reservas extends Component {
       currentHorarios,
       currentTurnos,
       currentDisciplinas,
-      currentAmbientes
+      currentAmbientes,
+      reservas
     } = this.state;
 
     return (
@@ -337,7 +345,13 @@ export default class Reservas extends Component {
         currentTurnos.length === 1 &&
         currentHorarios.length === 1 ? (
           <Grid.Row cards>
-            <ReservaCard />
+            {reservas.map(reserva => (
+              <ReservaCard
+                ambiente={reserva.ambiente.nome}
+                professor={reserva.professor.nome}
+                turmas={reserva.turmas.map(x => x.nome).join(", ")}
+              />
+            ))}
           </Grid.Row>
         ) : (
           <Calendar

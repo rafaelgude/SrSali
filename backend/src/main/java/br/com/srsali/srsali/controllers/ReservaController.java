@@ -1,6 +1,8 @@
 package br.com.srsali.srsali.controllers;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +18,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.srsali.srsali.enums.TipoAmbiente;
 import br.com.srsali.srsali.models.Reserva;
+import br.com.srsali.srsali.services.AmbienteService;
 import br.com.srsali.srsali.services.ReservaService;
 
 @RestController
@@ -24,13 +28,17 @@ import br.com.srsali.srsali.services.ReservaService;
 public class ReservaController {
     
     @Autowired ReservaService reservaService;
+    @Autowired AmbienteService ambienteService;
     
     @GetMapping
     public ResponseEntity<Page<Reserva>> findAll(@RequestParam(value="page", defaultValue="0") int page, 
                                                  @RequestParam(value="linesPerPage", defaultValue="24") int linesPerPage, 
                                                  @RequestParam(value="orderBy", defaultValue="data") String orderBy, 
-                                                 @RequestParam(value="direction", defaultValue="DESC") String direction) {
-        return ResponseEntity.ok().body(reservaService.findAll(page, linesPerPage, orderBy, direction));
+                                                 @RequestParam(value="direction", defaultValue="DESC") String direction,
+                                                 @RequestParam(value="ambientes", required = false) String ambientesIds,
+                                                 @RequestParam(value="tipoAmbiente", defaultValue="0") String tipoAmbiente) {
+        List<Integer> ambientes = ambientesIds != null && !ambientesIds.isEmpty() ? Stream.of(ambientesIds.split(",")).map(Integer::parseInt).collect(Collectors.toList()) : null;
+        return ResponseEntity.ok().body(reservaService.findAll(page, linesPerPage, orderBy, direction, ambientes, TipoAmbiente.toEnum(tipoAmbiente)));
     }
     
     @GetMapping("/{id}")

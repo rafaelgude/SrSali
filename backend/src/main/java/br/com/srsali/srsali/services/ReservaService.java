@@ -1,5 +1,7 @@
 package br.com.srsali.srsali.services;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -7,6 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
+import br.com.srsali.srsali.enums.TipoAmbiente;
 import br.com.srsali.srsali.exceptions.DataIntegrityException;
 import br.com.srsali.srsali.exceptions.ObjectNotFoundException;
 import br.com.srsali.srsali.models.Reserva;
@@ -17,8 +20,8 @@ public class ReservaService {
     @Autowired ReservaRepository reservaRepo;
     @Autowired UsuarioService usuarioService;
     
-    public Page<Reserva> findAll(int page, int linesPerPage, String orderBy, String direction) {
-        return reservaRepo.findAllByInstituicao(PageRequest.of(page, linesPerPage, Direction.valueOf(direction.toUpperCase()), orderBy), usuarioService.getAuthenticated().getInstituicao());
+    public Page<Reserva> findAll(int page, int linesPerPage, String orderBy, String direction, List<Integer> ambientes, TipoAmbiente tipoAmbiente) {
+        return reservaRepo.findAllByInstituicao(PageRequest.of(page, linesPerPage, Direction.valueOf(direction.toUpperCase()), orderBy), usuarioService.getAuthenticated().getInstituicao(), tipoAmbiente, ambientes);
     }
     
     public Reserva find(int id) {

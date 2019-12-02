@@ -9,11 +9,11 @@ export default class ReservaCard extends Component {
   }
 
   render() {
-    const { ambiente, disciplina, professor } = this.props;
+    const { ambiente, professor, turmas } = this.props;
     return (
       <>
-        <Grid.Col md={2}>
-          <Card title={ambiente} body={disciplina} footer={professor} />
+        <Grid.Col className="reservaCard" md={2}>
+          <Card title={ambiente} body={professor} footer={turmas} />
         </Grid.Col>
       </>
     );

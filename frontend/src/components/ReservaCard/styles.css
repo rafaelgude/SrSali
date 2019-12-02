@@ -1,4 +1,4 @@
-.card-header {
+.reservaCard .card-header {
   display: block !important;
   padding: 0.5rem !important;
   min-height: 0 !important;
@@ -7,12 +7,12 @@
   color: #4340bf;
 }
 
-.card-body {
+.reservaCard .card-body {
   font-size: 1.1rem;
 }
 
-.card-body,
-.card-footer {
+.reservaCard .card-body,
+.reservaCard .card-footer {
   padding: 0.5rem !important;
   text-align: center;
 }

@@ -16,6 +16,7 @@ import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
@@ -30,11 +31,13 @@ public class Reserva implements Serializable {
     @JoinTable(name = "reserva_turma", 
                joinColumns = @JoinColumn(name = "reserva_id"), 
                inverseJoinColumns = @JoinColumn(name = "turma_id"))
+	@JsonIgnoreProperties("curso")
 	private Set<Turma> turmas = new HashSet<>();
 
 	@ManyToOne
     @JoinColumn(name = "ambiente_id")
 	@NotNull(message = "Ambiente é obrigatório.")
+	@JsonIgnoreProperties("ferramentas")
 	private Ambiente ambiente;
 
 	@JsonIgnore
@@ -54,6 +57,7 @@ public class Reserva implements Serializable {
 
 	@ManyToOne
     @JoinColumn(name = "disciplina_id")
+	@JsonIgnoreProperties("ferramentas")
 	private Disciplina disciplina;
 
 	@NotNull(message = "Data é obrigatório.")

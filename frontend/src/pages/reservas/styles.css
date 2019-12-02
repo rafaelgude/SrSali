@@ -1,3 +1,7 @@
 .grid-row-filters {
   margin: 15px 5px 0 5px;
 }
+
+body {
+  overflow-x: hidden;
+}

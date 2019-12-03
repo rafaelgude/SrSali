@@ -141,7 +141,7 @@ public class DBService {
         // MATUTINO 07h
         reservaRepo.saveAll(List.of(new Reserva(Set.of(cc8m), laboratorios.get(1), uvv, professores.get(2), discCompiladores, h07, LocalDate.of(2019, 12, 05), false),
                                     new Reserva(Set.of(cc6m), laboratorios.get(2), uvv, professores.get(6), discBancoDados, h07, LocalDate.of(2019, 12, 05), false),
-                                    new Reserva(Set.of(cc4m), salas.get(0), uvv, professores.get(8), discCalculo, h07, LocalDate.of(2019, 12, 05), false)));
+                                    new Reserva(Set.of(cc4m), salas.get(0), uvv, professores.get(8), discCalculo, h07, LocalDate.of(2019, 12, 03), false)));
         
         // MATUTINO 09h
         reservaRepo.saveAll(List.of(new Reserva(Set.of(cc8m), laboratorios.get(1), uvv, professores.get(2), discCompiladores, h09, LocalDate.of(2019, 12, 05), false),

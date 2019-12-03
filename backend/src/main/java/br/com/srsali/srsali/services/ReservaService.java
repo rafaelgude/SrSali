@@ -20,8 +20,8 @@ public class ReservaService {
     @Autowired ReservaRepository reservaRepo;
     @Autowired UsuarioService usuarioService;
     
-    public Page<Reserva> findAll(int page, int linesPerPage, String orderBy, String direction, List<Integer> ambientes, TipoAmbiente tipoAmbiente) {
-        return reservaRepo.findAllByInstituicao(PageRequest.of(page, linesPerPage, Direction.valueOf(direction.toUpperCase()), orderBy), usuarioService.getAuthenticated().getInstituicao(), tipoAmbiente, ambientes);
+    public Page<Reserva> findAll(int page, int linesPerPage, String orderBy, String direction, TipoAmbiente tipoAmbiente, List<Integer> ambientes, List<Integer> horarios) {
+        return reservaRepo.findAllByInstituicao(PageRequest.of(page, linesPerPage, Direction.valueOf(direction.toUpperCase()), orderBy), usuarioService.getAuthenticated().getInstituicao(), tipoAmbiente, ambientes, horarios);
     }
     
     public Reserva find(int id) {

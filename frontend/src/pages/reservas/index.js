@@ -4,7 +4,6 @@ import { Form, Grid } from "tabler-react";
 import Select from "react-select";
 import Calendar from "@toast-ui/react-calendar";
 import api from "../../services/api";
-import schedulesProp from "./schedules";
 import "tui-calendar/dist/tui-calendar.css";
 import "tui-date-picker/dist/tui-date-picker.css";
 import "tui-time-picker/dist/tui-time-picker.css";
@@ -14,6 +13,7 @@ import ReservaCard from "../../components/ReservaCard";
 const dateFormat = "DD/MM/YYYY";
 const dateTimeFormat = "DD/MM/YYYY HH:mm:ss";
 const calendarFormat = "DD/MM/YYYY HH:mm";
+const reservaFormat = "YYYY-MM-DD HH:mm:ss";
 
 const dayNamesProp = {
   daynames: [
@@ -43,16 +43,13 @@ export default class Reservas extends Component {
     this.horarioSelect = React.createRef();
     this.disciplinaSelect = React.createRef();
     this.state = {
+      calendarView: "day",
       ambienteOptions: [],
       turmaOptions: [],
       disciplinaOptions: [],
       professorOptions: [],
       horarioOptions: [],
       horarios: [],
-      calendarProps: {
-        view: "day",
-        ...schedulesProp
-      },
       currentHorarios: [],
       currentTurnos: [],
       currentDisciplinas: [],
@@ -65,7 +62,9 @@ export default class Reservas extends Component {
       reservas: [],
       tipoAmbiente: 0
     };
+  }
 
+  componentDidMount() {
     this.loadSelects();
   }
 
@@ -124,9 +123,9 @@ export default class Reservas extends Component {
   };
 
   handleVisualizacaoChange = selectedOption => {
-    const { calendarProps } = this.state;
-    calendarProps.view = selectedOption.value;
-    this.setState({ calendarProps });
+    this.setState({ calendarView: selectedOption.value }, () =>
+      this.loadReservas()
+    );
   };
 
   async loadDisciplinas(currentTurmas) {
@@ -147,14 +146,14 @@ export default class Reservas extends Component {
   }
 
   async loadSelects() {
+    const tipoAmbiente = window.location.href.endsWith("/reservas/laboratorios")
+      ? 1
+      : 0;
+
     this.setState({
       currentAmbientes: [],
-      tipoAmbiente: window.location.href.endsWith("/reservas/laboratorios")
-        ? 1
-        : 0
+      tipoAmbiente
     });
-
-    const { tipoAmbiente } = this.state;
 
     const resAmbientes = await api.get(
       `/ambientes?linesPerPage=100&tipoAmbiente=${tipoAmbiente}`
@@ -205,9 +204,20 @@ export default class Reservas extends Component {
   }
 
   async loadReservas() {
-    const { tipoAmbiente } = this.state;
+    const { tipoAmbiente, currentAmbientes, currentHorarios } = this.state;
+
+    const paramAmbientes =
+      currentAmbientes && currentAmbientes.length > 0
+        ? `&ambientes=${currentAmbientes.map(x => x.value).join(",")}`
+        : "";
+
+    const paramHorarios =
+      currentHorarios && currentHorarios.length > 0
+        ? `&horarios=${currentHorarios.map(x => x.value).join(",")}`
+        : "";
+
     const res = await api.get(
-      `/reservas?linesPerPage=100&tipoAmbiente=${tipoAmbiente}`
+      `/reservas?linesPerPage=100&tipoAmbiente=${tipoAmbiente}${paramAmbientes}${paramHorarios}`
     );
     if (res) {
       this.setState({
@@ -223,7 +233,7 @@ export default class Reservas extends Component {
       disciplinaOptions,
       professorOptions,
       horarioOptions,
-      calendarProps,
+      calendarView,
       turnoOptions,
       currentHorarios,
       currentTurnos,
@@ -231,7 +241,7 @@ export default class Reservas extends Component {
       currentAmbientes,
       reservas
     } = this.state;
-
+    console.log(reservas);
     return (
       <>
         <Grid.Row className="grid-row-filters">
@@ -257,7 +267,11 @@ export default class Reservas extends Component {
                 theme={this.selectTheme}
                 isMulti
                 closeMenuOnSelect={false}
-                onChange={event => this.setState({ currentAmbientes: event })}
+                onChange={event => {
+                  this.setState({ currentAmbientes: event }, () =>
+                    this.loadReservas()
+                  );
+                }}
                 value={currentAmbientes}
               />
             </Form.Group>
@@ -312,10 +326,12 @@ export default class Reservas extends Component {
                 theme={this.selectTheme}
                 closeMenuOnSelect={false}
                 onChange={event => {
-                  this.setState({
-                    currentTurnos: event
-                  });
-                  this.loadDisciplinas();
+                  this.setState(
+                    {
+                      currentTurnos: event
+                    },
+                    () => this.loadDisciplinas()
+                  );
                 }}
               />
             </Form.Group>
@@ -330,34 +346,58 @@ export default class Reservas extends Component {
                 isMulti
                 closeMenuOnSelect={false}
                 onChange={event => {
-                  this.setState({
-                    currentHorarios: event
-                  });
+                  this.setState(
+                    {
+                      currentHorarios: event
+                    },
+                    () => this.loadReservas()
+                  );
                 }}
               />
             </Form.Group>
           </Grid.Col>
         </Grid.Row>
 
-        {calendarProps.view === "day" &&
+        {calendarView === "day" &&
         currentTurnos &&
         currentHorarios &&
         currentTurnos.length === 1 &&
         currentHorarios.length === 1 ? (
           <Grid.Row cards>
-            {reservas.map(reserva => (
-              <ReservaCard
-                ambiente={reserva.ambiente.nome}
-                professor={reserva.professor.nome}
-                turmas={reserva.turmas.map(x => x.nome).join(", ")}
-              />
-            ))}
+            {reservas
+              .filter(x => moment(x.data).isSame(moment().startOf("day")))
+              .map(reserva => (
+                <ReservaCard
+                  key={reserva.id}
+                  ambiente={reserva.ambiente.nome}
+                  professor={reserva.professor.nome}
+                  turmas={reserva.turmas.map(x => x.nome).join(", ")}
+                />
+              ))}
           </Grid.Row>
         ) : (
           <Calendar
             isReadOnly
             useDetailPopup
-            {...calendarProps}
+            view={calendarView}
+            schedules={reservas.map(reserva => ({
+              title: `${reserva.turmas.map(x => x.nome).join(", ")} - ${
+                reserva.professor.nome
+              } - ${reserva.ambiente.nome}`,
+              category: "time",
+              start: new Date(
+                moment(
+                  `${reserva.data} ${reserva.horario.horaInicio}`,
+                  reservaFormat
+                )
+              ),
+              end: new Date(
+                moment(
+                  `${reserva.data} ${reserva.horario.horaFim}`,
+                  reservaFormat
+                )
+              )
+            }))}
             taskView={false}
             setTheme={{ "week.timegridLeft.width": "500px" }}
             scheduleView={["time"]}

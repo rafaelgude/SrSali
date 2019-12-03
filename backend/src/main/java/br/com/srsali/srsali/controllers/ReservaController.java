@@ -35,10 +35,13 @@ public class ReservaController {
                                                  @RequestParam(value="linesPerPage", defaultValue="24") int linesPerPage, 
                                                  @RequestParam(value="orderBy", defaultValue="data") String orderBy, 
                                                  @RequestParam(value="direction", defaultValue="DESC") String direction,
+                                                 @RequestParam(value="tipoAmbiente", defaultValue="0") String tipoAmbiente,
                                                  @RequestParam(value="ambientes", required = false) String ambientesIds,
-                                                 @RequestParam(value="tipoAmbiente", defaultValue="0") String tipoAmbiente) {
+                                                 @RequestParam(value="horarios", required = false) String horariosIds,
+                                                 @RequestParam(value="turnos", required = false) String turnos) {
         List<Integer> ambientes = ambientesIds != null && !ambientesIds.isEmpty() ? Stream.of(ambientesIds.split(",")).map(Integer::parseInt).collect(Collectors.toList()) : null;
-        return ResponseEntity.ok().body(reservaService.findAll(page, linesPerPage, orderBy, direction, ambientes, TipoAmbiente.toEnum(tipoAmbiente)));
+        List<Integer> horarios = horariosIds != null && !horariosIds.isEmpty() ? Stream.of(horariosIds.split(",")).map(Integer::parseInt).collect(Collectors.toList()) : null;
+        return ResponseEntity.ok().body(reservaService.findAll(page, linesPerPage, orderBy, direction, TipoAmbiente.toEnum(tipoAmbiente), ambientes, horarios));
     }
     
     @GetMapping("/{id}")

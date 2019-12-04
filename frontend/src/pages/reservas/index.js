@@ -241,7 +241,7 @@ export default class Reservas extends Component {
       currentAmbientes,
       reservas
     } = this.state;
-    console.log(reservas);
+
     return (
       <>
         <Grid.Row className="grid-row-filters">

@@ -26,7 +26,7 @@ const navBarItems = [
       },
       {
         value: "Gerenciamento",
-        to: "/app/reservas",
+        to: "/app/reservas/gerenciamento",
         useExact: true,
         LinkComponent
       }

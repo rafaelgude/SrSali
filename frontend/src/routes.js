@@ -7,6 +7,7 @@ import Home from "./pages/home";
 import Header from "./pages/header";
 import Reservas from "./pages/reservas";
 import Ferramentas from "./pages/ferramentas";
+import ReservasAdm from "./pages/reservas-adm";
 
 const PrivateRoute = ({ component: Component, ...rest }) => (
   <Route
@@ -50,6 +51,11 @@ const Routes = () => (
           exact
           path="/app/reservas/laboratorios"
           component={Reservas}
+        />
+        <PrivateRoute
+          exact
+          path="/app/reservas/gerenciamento"
+          component={ReservasAdm}
         />
         <PrivateRoute exact path="/app/ferramentas" component={Ferramentas} />
         <PrivateRoute

@@ -1,5 +1,6 @@
 package br.com.srsali.srsali.repositories;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -10,6 +11,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import br.com.srsali.srsali.enums.TipoAmbiente;
+import br.com.srsali.srsali.models.Ambiente;
+import br.com.srsali.srsali.models.Horario;
 import br.com.srsali.srsali.models.InstituicaoDeEnsino;
 import br.com.srsali.srsali.models.Reserva;
 
@@ -27,5 +30,9 @@ public interface ReservaRepository extends JpaRepository<Reserva, Integer> {
     Page<Reserva> findAllByInstituicao(Pageable pageable, @Param("instituicao") InstituicaoDeEnsino instituicao, @Param("tipoAmbiente") TipoAmbiente tipoAmbiente, 
                                        @Param("ambientes") List<Integer> ambientes,
                                        @Param("horarios") List<Integer> horarios);
+    
+    Page<Reserva> findAllByInstituicaoOrderByDataDesc(Pageable pageable, InstituicaoDeEnsino instituicao);
+    
+    List<Reserva> findByInstituicaoAndDataAndAmbienteAndHorario(InstituicaoDeEnsino instituicao, LocalDate data, Ambiente ambiente, Horario horario);
     
 }

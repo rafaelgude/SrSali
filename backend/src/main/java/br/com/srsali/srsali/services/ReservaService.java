@@ -20,6 +20,10 @@ public class ReservaService {
     @Autowired ReservaRepository reservaRepo;
     @Autowired UsuarioService usuarioService;
     
+    public Page<Reserva> findAll(int page, int linesPerPage, String orderBy, String direction) {
+        return reservaRepo.findAllByInstituicaoOrderByDataDesc(PageRequest.of(page, linesPerPage, Direction.valueOf(direction.toUpperCase()), orderBy), usuarioService.getAuthenticated().getInstituicao());
+    }
+    
     public Page<Reserva> findAll(int page, int linesPerPage, String orderBy, String direction, TipoAmbiente tipoAmbiente, List<Integer> ambientes, List<Integer> horarios) {
         return reservaRepo.findAllByInstituicao(PageRequest.of(page, linesPerPage, Direction.valueOf(direction.toUpperCase()), orderBy), usuarioService.getAuthenticated().getInstituicao(), tipoAmbiente, ambientes, horarios);
     }
@@ -30,6 +34,10 @@ public class ReservaService {
 
     public void insert(Reserva reserva) {
         reserva.setInstituicao(usuarioService.getAuthenticated().getInstituicao());
+        
+        if (!reservaRepo.findByInstituicaoAndDataAndAmbienteAndHorario(reserva.getInstituicao(), reserva.getData(), reserva.getAmbiente(), reserva.getHorario()).isEmpty())
+            new DataIntegrityException("Já existe uma reserva para este Ambiente e Horário nesta Data.");
+        
         reservaRepo.save(reserva);
     }
     
